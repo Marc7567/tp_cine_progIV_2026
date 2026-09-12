@@ -139,3 +139,9 @@ Requerimientos funcionales:
 56) El administrador podrá consultar cuál es el producto más vendido del Candy Bar.
 
 57) El administrador podrá consultar los registros de actividad realizados por administradores y empleados.
+
+---------------------------------------
+Agregar:
+falto detallar bien la cuadrícula obligatoria de 20 filas por 3 columnas (con distribución de 4, 20 y 4 butacas) y el bloque específico de 2, 10 y 2 para las filas adaptadas
+---------------------------------
+Decisiones 
