@@ -148,3 +148,9 @@ Arquitectura:
 ---------------------------------
 Decisiones Tecnicas:
 1) No se solicitarán ni mostrarán en el perfil del usuario registrado el tipo de sangre, color de ojos ni la cantidad de días de vacaciones anuales, por considerarse datos innecesarios para el registro y funcionamiento de la aplicación.
+
+2) Las reseñas y calificaciones no se limitarán a usuarios registrados, ya que en los mails se establece que 'cualquier persona' podrá calificar una película y dejar un comentario.
+
+4) La compra de entradas durante la preventa estará disponible para los usuarios en general y no será exclusiva de usuarios registrados, ya que no se establece que sea exclusivo para usuarios registrados.
+
+5) No se establece que el usuario deba consultar obligatoriamente el detalle completo de una película antes de comprar entradas. El requerimiento únicamente establece que las reseñas y la puntuación promedio deberán poder consultarse antes de sacar las entradas.
