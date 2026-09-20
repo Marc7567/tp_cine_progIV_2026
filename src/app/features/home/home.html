@@ -1,1 +1,22 @@
-<p>home works!</p>
+<section class="home-container">
+  <h2>Catálogo de Películas</h2>
+
+  <div class="movies-grid">
+    <!-- @for — Itera sobre las películas que vienen desde Supabase -->
+    @for (pelicula of peliculas(); track pelicula.id_pelicula) {
+      <div class="movie-wrapper">
+        <!-- mostramos el contenido de las peliculas -->
+        <app-pelicula-card
+          [pelicula]="pelicula"
+        />
+      </div>
+    } @empty {
+      <div class="no-results">
+        <p>😔 No hay películas disponibles.</p>
+      </div>
+    }
+  </div>
+
+  <!-- RouterOutlet para futuras rutas hijas -->
+  <router-outlet />
+</section>
