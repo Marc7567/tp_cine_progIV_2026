@@ -1,0 +1,29 @@
+<section class="detail-container">
+  @if (pelicula(); as peliculaActual) {
+    <div class="detail-card">
+        <!-- Poster de la pelicula  -->
+      <img
+        [src]="peliculaActual.imagen"
+        [attr.alt]="'Póster de ' + peliculaActual.titulo"
+        class="detail-cover"
+      />
+        
+        <!-- Detalles de la pelicula -->
+      <div class="detail-info">
+        <h1>{{ peliculaActual.titulo }}</h1>
+        <p class="detail-synopsis">{{ peliculaActual.sinopsis }}</p>
+        <p class="detail-duration">Duracion: {{ peliculaActual.duracion_minutos | duracion }}</p>
+        <p class="detail-age">Edad minima: {{ peliculaActual.edad_minima | edadMinima }}</p>
+        <p class="detail-release">Fecha de estreno: {{ peliculaActual.fecha_estreno | fechaEstreno}}</p>
+      </div>
+    </div>
+  } @else {
+    <div class="not-found">
+      <h2>Pelicula no encontrada</h2>
+      <p>La pelicula con ID "{{ id() }}" no existe en el catálogo.</p>
+    </div>
+  }
+
+  <!-- boton para volver al home -->
+  <button class="back-btn" (click)="volver()">← Volver al Catalago</button>
+</section>
