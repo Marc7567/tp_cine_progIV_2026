@@ -1,22 +1,24 @@
 <section class="home-container">
-  <h2>Catálogo de Películas</h2>
+  <h2>Catalogo de Peliculas</h2>
+
+  <!-- Two-way binding con model(): sincroniza el valor de búsqueda entre Home y SearchBar -->
+  <app-search-bar [(termino)]="filtroBusqueda" />
 
   <div class="movies-grid">
-    <!-- @for — Itera sobre las películas que vienen desde Supabase -->
-    @for (pelicula of peliculas(); track pelicula.id_pelicula) {
+    <!-- @for — Itera sobre la lista de películas filtradas -->
+    @for (pelicula of peliculasFiltradas(); track pelicula.id_pelicula) {
       <div class="movie-wrapper">
-        <!-- mostramos el contenido de las peliculas -->
-        <app-pelicula-card
-          [pelicula]="pelicula"
-        />
+        <!-- input(): pasamos cada película al componente hijo PeliculaCard -->
+        <app-pelicula-card [pelicula]="pelicula" />
       </div>
     } @empty {
+      <!-- @empty se ejecuta cuando peliculasFiltradas() retorna un array vacío -->
       <div class="no-results">
-        <p>😔 No hay películas disponibles.</p>
+        <p>😔 No se encontraron películas para "{{ filtroBusqueda() }}"</p>
       </div>
     }
   </div>
 
-  <!-- RouterOutlet para futuras rutas hijas -->
+  <!-- router-outlet para futuras rutas hijas -->
   <router-outlet />
 </section>

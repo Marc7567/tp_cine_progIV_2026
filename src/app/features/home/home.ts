@@ -1,15 +1,15 @@
 import { Component, signal, computed, effect, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { PeliculaService } from '../../core/services/pelicula.service';
 import { PeliculaCard } from '../../shared/componentes/pelicula-card/pelicula-card';
+import { SearchBar } from '../../shared/componentes/search-bar/search-bar';
+import { PeliculaService } from '../../core/services/pelicula.service';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterOutlet, PeliculaCard],
+  imports: [PeliculaCard, SearchBar, RouterOutlet],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-
 export class Home {
   // inject() — forma moderna de inyectar dependencias
   private peliculaService = inject(PeliculaService);
@@ -22,25 +22,23 @@ export class Home {
   filtroBusqueda = signal('');
 
   // computed() — estado derivado: filtra las películas
+  // automáticamente cuando cambia el término de búsqueda o la lista
   peliculasFiltradas = computed(() => {
     const termino = this.filtroBusqueda().toLowerCase();
 
     if (!termino) {
       return this.peliculas();
     }
-
     return this.peliculas().filter(pelicula =>
       pelicula.titulo.toLowerCase().includes(termino)
     );
   });
 
   constructor() {
-    console.log('Home iniciado');
+    // effect() — muestra en consola el estado actual del filtro
     effect(() => {
-          console.log(`Películas recibidas:`, this.peliculas());
-
       console.log(
-        `Filtro activo: "${this.filtroBusqueda()}" → ${this.peliculasFiltradas().length} resultados`
+        `🎬 Filtro activo: "${this.filtroBusqueda()}" → ${this.peliculasFiltradas().length} resultados`
       );
     });
   }
