@@ -8,4 +8,5 @@ export interface pelicula {
   edad_minima: number;
   disponible_principal: boolean;
   activa: boolean;
+  generos: string[];
 }

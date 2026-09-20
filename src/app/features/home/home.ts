@@ -10,34 +10,42 @@ import { SearchBar } from '../../shared/componentes/search-bar/search-bar';
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-
 export class Home {
   private peliculaService = inject(PeliculaService);
   private router = inject(Router);
 
   peliculas = this.peliculaService.peliculas;
+
   filtroBusqueda = signal('');
-  
+  generoSeleccionado = signal('');
+
+  generos = computed(() => {
+    const todosLosGeneros = this.peliculas().flatMap((pelicula) => pelicula.generos);
+    return [...new Set(todosLosGeneros)].sort();
+  });
+
   peliculasFiltradas = computed(() => {
     const termino = this.filtroBusqueda().toLowerCase();
+    const genero = this.generoSeleccionado();
     
-    if (!termino) {
+    if (!termino && !genero) {
       return this.peliculas();
     }
     return this.peliculas().filter(pelicula =>
-      pelicula.titulo.toLowerCase().includes(termino)
+        (!termino || pelicula.titulo.toLowerCase().includes(termino)) &&
+        (!genero || pelicula.generos.includes(genero)),
     );
   });
 
   constructor() {
     effect(() => {
       console.log(
-        `Filtro activo: "${this.filtroBusqueda()}" -> ${this.peliculasFiltradas().length} resultados`
+        `Filtros activos -> busqueda: "${this.filtroBusqueda()}" | género: "${this.generoSeleccionado()}" | resultados: ${this.peliculasFiltradas().length}`,
       );
     });
   }
 
-  verDetalle(peliculaId: number): void {
-    this.router.navigate(['/home/pelicula', peliculaId]);
+  verDetalle(id: number): void {
+    this.router.navigate(['/home/pelicula', id]);
   }
 }

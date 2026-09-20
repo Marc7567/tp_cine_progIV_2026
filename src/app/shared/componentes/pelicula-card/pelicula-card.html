@@ -1,11 +1,15 @@
 <div class="card">
-  <!-- Portada de la pelicula -->
   <img [src]="pelicula().imagen" [attr.alt]="'Póster de ' + pelicula().titulo" class="poster" />
-  
-  <!-- Detalles de la pelicula -->
+
   <div class="card-body">
     <h2>{{ pelicula().titulo }}</h2>
     <p class="synopsis">{{ pelicula().sinopsis }}</p>
+    <p class="genres">Generos:
+      @for (genero of pelicula().generos; track genero) {
+        {{ genero }}
+        @if (!$last) {,}
+      }
+    </p>
     <p class="duration">Duracion: {{ pelicula().duracion_minutos | duracion }}</p>
     <p class="age">Edad minima: {{ pelicula().edad_minima | edadMinima }}</p>
   </div>

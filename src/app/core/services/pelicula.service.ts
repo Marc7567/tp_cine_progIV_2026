@@ -44,17 +44,41 @@ export class PeliculaService {
 
         const { data, error } = await this.supabase
             .from('peliculas')
-            .select('*')
+            .select(`*,
+                pelicula_genero (
+                    generos (
+                        id_genero,nombre
+                    )
+                )
+            `)
             .order('titulo', { ascending: true });
 
-        if (error) {
-            console.error('❌ Error al cargar películas desde Supabase:', error.message);
-        } else {
-            this.peliculasSignal.set(data || []);
-            console.log(`✅ Se cargaron ${data?.length ?? 0} películas desde Supabase`);
-        }
+    if (error) {
+        console.error( 'Error al cargar películas desde Supabase:', error.message);
+    } else {
+        const peliculas = (data || []).map((pelicula: any) => ({
+        id_pelicula: pelicula.id_pelicula,
+        titulo: pelicula.titulo,
+        imagen: pelicula.imagen,
+        sinopsis: pelicula.sinopsis,
+        duracion_minutos: pelicula.duracion_minutos,
+        fecha_estreno: pelicula.fecha_estreno,
+        edad_minima: pelicula.edad_minima,
+        disponible_principal: pelicula.disponible_principal,
+        activa: pelicula.activa,
 
-        this.cargando.set(false);
+        generos: (pelicula.pelicula_genero || [])
+            .map((relacion: any) => relacion.generos?.nombre)
+            .filter((nombre: string | undefined) => nombre)
+        }));
+
+        this.peliculasSignal.set(peliculas);
+        console.log(
+        `Se cargaron ${peliculas.length} películas desde Supabase`
+        );
+    }
+
+    this.cargando.set(false);
     }
 
     // REALTIME — Escucha cambios en la tabla 'peliculas'
@@ -65,7 +89,7 @@ export class PeliculaService {
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'peliculas' },
                 (payload) => {
-                console.log('🔄 Cambio en tiempo real:', payload.eventType, payload);
+                console.log('Cambio en tiempo real:', payload.eventType, payload);
 
                 switch (payload.eventType) {
 
