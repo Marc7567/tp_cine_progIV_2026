@@ -1,17 +1,26 @@
 import { Routes } from '@angular/router';
-import { Home } from './features/home/home';
 
 export const routes: Routes = [
+
+  // Redirección: la ruta vacía redirige a /home
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: '/home',
     pathMatch: 'full'
   },
   {
     path: 'home',
-    component: Home
+    loadComponent: () => import('./features/home/home').then(c => c.Home),
+    children: [
+      // Ruta hija con parámetro dinámico ':id'
+      {
+        path: 'pelicula/:id',
+        loadComponent: () =>import('./features/pelicula-detail/pelicula-detail').then(c => c.PeliculaDetail)
+      }]
   },
-  { 
-    path: '**', 
-    redirectTo: '/home' }
+  // Wildcard: cualquier ruta no definida redirige a /home
+  {
+    path: '**',
+    redirectTo: '/home'
+  }
 ];

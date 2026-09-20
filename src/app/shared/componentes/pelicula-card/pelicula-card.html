@@ -1,12 +1,12 @@
 <div class="card">
-  <!-- Property Binding: mostramos la imagen de la película -->
+  <!-- Portada de la pelicula -->
   <img [src]="pelicula().imagen" [attr.alt]="'Póster de ' + pelicula().titulo" class="poster" />
-
+  
+  <!-- Detalles de la pelicula -->
   <div class="card-body">
-    <!-- mostramos los datos de la película -->
     <h2>{{ pelicula().titulo }}</h2>
-    <p class="synopsis">sinopsis: {{ pelicula().sinopsis }}</p>
-    <p class="duration">Duracion: {{ pelicula().duracion_minutos | duracion}}</p>
-    <p class="age">Edad minima: {{ pelicula().edad_minima | edadMinima}}</p>
+    <p class="synopsis">{{ pelicula().sinopsis }}</p>
+    <p class="duration">Duracion: {{ pelicula().duracion_minutos | duracion }}</p>
+    <p class="age">Edad minima: {{ pelicula().edad_minima | edadMinima }}</p>
   </div>
 </div>

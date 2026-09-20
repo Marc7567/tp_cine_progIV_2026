@@ -30,7 +30,7 @@ export class PeliculaDetail {
     const todasLasPeliculas = this.peliculaService.peliculas();
 
     return todasLasPeliculas.find(
-      p => p.id_pelicula === Number(this.id())
+      pelicula => pelicula.id_pelicula === Number(this.id())
     );
   });
 

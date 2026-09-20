@@ -1,24 +1,26 @@
 <section class="home-container">
-  <h2>Catalogo de Peliculas</h2>
+  <h2>🎬 Catálogo de Películas</h2>
 
-  <!-- Two-way binding con model(): sincroniza el valor de búsqueda entre Home y SearchBar -->
+  <!-- Barra de busqueta por titulo -->
   <app-search-bar [(termino)]="filtroBusqueda" />
 
   <div class="movies-grid">
-    <!-- @for — Itera sobre la lista de películas filtradas -->
     @for (pelicula of peliculasFiltradas(); track pelicula.id_pelicula) {
       <div class="movie-wrapper">
-        <!-- input(): pasamos cada película al componente hijo PeliculaCard -->
+        
+        <!-- Detalles de la pelicula -->
         <app-pelicula-card [pelicula]="pelicula" />
+        
+        <!-- Boton de ver detalles -->
+        <button class="detail-btn" (click)="verDetalle(pelicula.id_pelicula)">
+          Ver Detalles
+        </button>
       </div>
     } @empty {
-      <!-- @empty se ejecuta cuando peliculasFiltradas() retorna un array vacío -->
       <div class="no-results">
-        <p>No se encontraron películas para "{{ filtroBusqueda() }}"</p>
+        <p>No se encontraron peliculas para "{{ filtroBusqueda() }}"</p>
       </div>
     }
   </div>
-
-  <!-- router-outlet para futuras rutas hijas -->
   <router-outlet />
 </section>
