@@ -2,6 +2,7 @@ import { Component, input, computed, inject, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { PeliculaService } from '../../core/services/pelicula.service';
 import { FuncionesService } from '../../core/services/funciones.service';
+
 import { EdadMinimaPipe } from '../../shared/pipes/edad-minima.pipe';
 import { DuracionPipe } from '../../shared/pipes/duracion.pipe';
 import { FechaEstrenoPipe } from '../../shared/pipes/fecha-estreno.pipe';
@@ -9,7 +10,12 @@ import { HoraPipe } from '../../shared/pipes/hora.pipe';
 
 @Component({
   selector: 'app-pelicula-detail',
-  imports: [EdadMinimaPipe, DuracionPipe, FechaEstrenoPipe, HoraPipe],
+  imports: [
+    EdadMinimaPipe,
+    DuracionPipe,
+    FechaEstrenoPipe,
+    HoraPipe
+  ],
   templateUrl: './pelicula-detail.html',
   styleUrl: './pelicula-detail.css'
 })
@@ -34,8 +40,13 @@ export class PeliculaDetail {
   constructor() {
     effect(() => {
       const idPelicula = Number(this.id());
+
       this.funcionesService.cargarFuncionesPorPelicula(idPelicula);
     });
+  }
+
+  comprarEntrada(idFuncion: number): void {
+    this.router.navigate(['/compra-entrada', idFuncion]);
   }
 
   volver(): void {

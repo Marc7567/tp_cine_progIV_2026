@@ -40,9 +40,10 @@ export class Home {
 
   constructor() {
     effect(() => {
-      console.log(
-        `Filtros activos -> busqueda: "${this.filtroBusqueda()}" | género: "${this.generoSeleccionado()}" | resultados: ${this.peliculasFiltradas().length}`,
-      );
+      // Para verificar 
+      console.log(`Filtros activos: busqueda: "${this.filtroBusqueda()}" -
+      género: "${this.generoSeleccionado()}" - 
+      resultados: ${this.peliculasFiltradas().length}`,);
     });
   }
 

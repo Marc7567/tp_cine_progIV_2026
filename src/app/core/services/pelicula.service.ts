@@ -62,9 +62,6 @@ export class PeliculaService {
         }));
 
         this.peliculasSignal.set(peliculas);
-        console.log(
-        `Se cargaron ${peliculas.length} películas desde Supabase`
-        );
     }
 
     this.cargando.set(false);
@@ -79,7 +76,6 @@ export class PeliculaService {
                 { event: '*', schema: 'public', table: 'peliculas' },
                 (payload) => {
                 console.log('Cambio en tiempo real:', payload.eventType, payload);
-
                 switch (payload.eventType) {
 
                     // INSERT — se agregó una nueva película
@@ -94,9 +90,7 @@ export class PeliculaService {
                     case 'UPDATE':
                     this.peliculasSignal.update(peliculas =>
                         peliculas.map(p =>
-                        p.id_pelicula === (payload.new as pelicula).id_pelicula
-                            ? payload.new as pelicula
-                            : p
+                            p.id_pelicula === (payload.new as pelicula).id_pelicula? payload.new as pelicula: p
                         )
                     );
                     break;
@@ -116,7 +110,6 @@ export class PeliculaService {
     }
 
     // Obtener una película por ID
-    // Retorna un computed que se actualiza reactivamente
     getPeliculaById(id: number) {
         return computed(() =>
             this.peliculasSignal().find(pelicula => pelicula.id_pelicula === id)

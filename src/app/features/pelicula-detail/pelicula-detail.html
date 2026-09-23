@@ -11,45 +11,55 @@
       <!-- Detalles de la película -->
       <div class="detail-info">
         <h1>{{ peliculaActual.titulo }}</h1>
+
         <p class="detail-synopsis">{{ peliculaActual.sinopsis }}</p>
-        <p class="detail-duration">Duración: {{ peliculaActual.duracion_minutos | duracion }}</p>
-        <p class="detail-age">Edad mínima: {{ peliculaActual.edad_minima | edadMinima }}</p>
-        <p class="detail-release">
-          Fecha de estreno: {{ peliculaActual.fecha_estreno | fechaEstreno }}
-        </p>
+        <p class="detail-duration">Duracion:{{ peliculaActual.duracion_minutos | duracion }}</p>
+        <p class="detail-age">Edad minima:{{ peliculaActual.edad_minima | edadMinima }}</p>
+        <p class="detail-release">Fecha de estreno:{{ peliculaActual.fecha_estreno | fechaEstreno }}</p>
       </div>
     </div>
 
     <!-- Funciones disponibles -->
     <section class="funciones-section">
       <h2>Funciones disponibles</h2>
+
       @if (funciones().length > 0) {
         <div class="funciones-list">
           @for (funcion of funciones(); track funcion.id_funcion) {
             <article class="funcion-card">
               <div class="funcion-horario">
-                <strong> {{ funcion.hora_inicio | hora}} - {{ funcion.hora_fin | hora}} </strong>
+                <strong>
+                  {{ funcion.hora_inicio | hora }} - {{ funcion.hora_fin | hora }}
+                </strong>
               </div>
 
               <div class="funcion-info">
-                <span>{{ funcion.fecha | fechaEstreno}}</span>
+                <span>{{ funcion.fecha | fechaEstreno }}</span>
                 <span>{{ funcion.modalidad }}</span>
                 <span>{{ funcion.idioma }}</span>
-                <span>${{ funcion.precio_base }}</span>
+                <span> ${{ funcion.precio_base }} </span>
               </div>
+
+              <button
+                type="button"
+                class="comprar-btn"
+                (click)="comprarEntrada(funcion.id_funcion)"
+              >
+                Comprar entrada
+              </button>
             </article>
           }
         </div>
       } @else {
-        <p class="sin-funciones">No hay funciones disponibles para esta película.</p>
+        <p class="sin-funciones">No hay funciones disponibles.</p>
       }
     </section>
   } @else {
     <div class="not-found">
-      <p>La pelicula con ID "{{ id() }}" no existe en el catalogo.</p>
+      <p>La película con ID "{{ id() }}" no existe en el catálogo.</p>
     </div>
   }
 
-  <!-- Boton para volver al home -->
-  <button class="back-btn" (click)="volver()">Volver al Catálogo</button>
+  <!-- Botón para volver al home -->
+  <button type="button" class="back-btn" (click)="volver()">Volver al Catálogo</button>
 </section>

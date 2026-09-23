@@ -1,0 +1,114 @@
+.compra-container {
+  padding: 2rem;
+}
+
+.compra-resumen {
+  margin-bottom: 2rem;
+}
+
+.pelicula-resumen {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.pelicula-resumen img {
+  width: 180px;
+  border-radius: 10px;
+}
+
+.butacas-section {
+  margin-top: 2rem;
+}
+
+.leyenda {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.leyenda span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.leyenda-color {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.leyenda-color.normal {
+  background: #15d5d8;
+}
+
+.leyenda-color.accesible {
+  background: #2cc038;
+}
+
+.leyenda-color.vip {
+  background: #c9a227;
+}
+
+.leyenda-color.ocupada {
+  background: #c62828;
+}
+
+.butacas-mapa {
+  display: grid;
+  grid-template-columns: repeat(28, 32px);
+  gap: 0.35rem;
+}
+
+.butaca {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  font-size: 0.65rem;
+  font-weight: bold;
+
+  background: #15d5d8;
+  color: black;
+}
+
+.butaca.accesible:not(.ocupada) {
+  background: #2cc038;
+}
+
+.butaca.vip:not(.ocupada) {
+  background: #c9a227;
+}
+
+.butaca.ocupada {
+  background: #c62828;
+  cursor: not-allowed;
+}
+
+.butaca.seleccionada {
+  outline: 3px solid white;
+  box-shadow: 0 0 0 2px black;
+}
+
+.seleccion-resumen {
+  margin-top: 2rem;
+}
+
+.continuar-btn {
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.back-btn {
+  margin-top: 2rem;
+}

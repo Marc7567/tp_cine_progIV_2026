@@ -1,0 +1,87 @@
+<section class="compra-container">
+  @if (cargando()) {
+    <p>Cargando información de la función...</p>
+  } @else if (funcion(); as funcionActual) {
+    @if (pelicula(); as peliculaActual) {
+      <section class="compra-resumen">
+        <h1>Comprar entrada</h1>
+
+        <div class="pelicula-resumen">
+          <img [src]="peliculaActual.imagen" [alt]="'Póster de ' + peliculaActual.titulo" />
+
+          <div>
+            <h2>{{ peliculaActual.titulo }}</h2>
+
+            <p>Fecha:{{ funcionActual.fecha | fechaEstreno }}</p>
+            <p>
+                Horario: {{ funcionActual.hora_inicio | hora }} - {{ funcionActual.hora_fin | hora }}
+            </p>
+            <p>Sala: {{ funcionActual.id_sala }}</p>
+            <p>Modalidad: {{ funcionActual.modalidad }}</p>
+            <p>Idioma: {{ funcionActual.idioma }}</p>
+            <p>Precio base: ${{ funcionActual.precio_base }}</p>
+          </div>
+        </div>
+      </section>
+    }
+
+    <section class="butacas-section">
+      <h2>Elegí tu butaca</h2>
+
+      <div class="leyenda">
+        <span>
+          <i class="leyenda-color normal"></i>
+          Normales
+        </span>
+
+        <span>
+          <i class="leyenda-color accesible"></i>
+          Accesible para discapacitados
+        </span>
+
+        <span>
+          <i class="leyenda-color vip"></i>
+          VIP
+        </span>
+
+        <span>
+          <i class="leyenda-color ocupada"></i>
+          Ocupadas
+        </span>
+      </div>
+
+      <div class="butacas-mapa">
+        @for (butaca of butacas(); track butaca.id_butaca) {
+          <button
+            type="button"
+            class="butaca"
+            [class.accesible]="butaca.tipo === 'accesible'"
+            [class.vip]="butaca.tipo === 'vip'"
+            [class.ocupada]="butaca.ocupada"
+            [class.seleccionada]="butacaSeleccionada() === butaca.id_butaca"
+            [disabled]="butaca.ocupada"
+            (click)="seleccionarButaca(butaca.id_butaca)"
+          >
+            {{ butaca.fila }}{{ butaca.columna }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- @if (butacaSeleccionada(); as idButaca) {
+      <section class="seleccion-resumen">
+        <h2>Butaca seleccionada</h2>
+        <p>Butaca:<strong>{{ idButaca }}</strong></p>
+
+        <button type="button" class="continuar-btn">Continuar</button>
+      </section>
+    } -->
+  } @else {
+    <section class="not-found">
+      <h2>Función no encontrada</h2>
+      <p>No se pudo encontrar la función solicitada.</p>
+    </section>
+  }
+
+  <button type="button" class="back-btn" (click)="volver()">Volver</button>
+</section>

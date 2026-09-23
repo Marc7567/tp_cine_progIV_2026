@@ -32,4 +32,19 @@ export class FuncionesService {
         }
             this.cargando.set(false);
     }
+
+    // obtenemos los datos de cada funcion 
+    async obtenerFuncionPorId(idFuncion: number): Promise<Funcion | null> {
+        const { data, error } = await this.supabase
+            .from('funciones')
+            .select('*')
+            .eq('id_funcion', idFuncion)
+            .single();
+
+        if (error) {
+            console.error('Error al obtener la función:', error.message);
+            return null;
+        }
+        return data;
+    }
 }
