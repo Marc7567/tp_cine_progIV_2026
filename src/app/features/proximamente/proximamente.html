@@ -1,0 +1,24 @@
+<section class="upcoming-container">
+  <h2>Proximos Estrenos</h2>
+
+  <div class="movies-grid">
+    @for (pelicula of peliculasProximas(); track pelicula.id_pelicula) {
+        <div class="movie-wrapper">
+            <!-- Ver peliculas proximas -->
+            <app-pelicula-card [pelicula]="pelicula" />
+            
+            <!-- Boton para ver detalles -->
+            <button
+            class="detail-btn"
+            (click)="verDetalle(pelicula.id_pelicula)"
+            >
+            Ver Detalle
+            </button>
+        </div>
+    } @empty {
+      <div class="no-results">
+        <p>No hay peliculas proximas a estrenarse.</p>
+      </div>
+    }
+  </div>
+</section>

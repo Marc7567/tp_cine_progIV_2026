@@ -18,6 +18,10 @@ export const routes: Routes = [
         loadComponent: () =>import('./features/pelicula-detail/pelicula-detail').then(c => c.PeliculaDetail)
       }]
   },
+  {
+    path: 'proximamente',
+    loadComponent: () => import('./features/proximamente/proximamente').then(c => c.Proximamente)
+  },
   // Wildcard: cualquier ruta no definida redirige a /home
   {
     path: '**',

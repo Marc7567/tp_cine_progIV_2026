@@ -8,37 +8,26 @@ import { RealtimeChannel } from '@supabase/supabase-js';
 })
 
 export class PeliculaService {
-    // inject() — inyectamos el cliente de Supabase
     private supabase = inject(SupabaseService).client;
     private destroyRef = inject(DestroyRef);
-
-    // signal() privado — solo el servicio puede modificar la lista directamente
     private peliculasSignal = signal<pelicula[]>([]);
 
-    // signal() para indicar si los datos están cargando
     cargando = signal(false);
-
-    // computed() de solo lectura — los componentes leen de aquí
-    // Al ser computed, se actualiza automáticamente cuando peliculasSignal cambia
     peliculas = computed(() => this.peliculasSignal());
 
-    // Referencia al canal de Realtime para limpieza
     private channel!: RealtimeChannel;
 
-  constructor() {
-        // Al iniciar el servicio, cargamos las películas desde Supabase
+    constructor() {
         this.cargarPeliculasDesdeDB();
-
-        // Nos suscribimos a cambios en tiempo real
         this.channel = this.iniciarRealtime();
 
-        // Limpiamos la suscripción cuando el servicio se destruye
+        // Limpiamos la suscripcion cuando el servicio se destruye
         this.destroyRef.onDestroy(() => {
             this.supabase.removeChannel(this.channel);
         });
     }
 
-    // CARGAR PELÍCULAS DESDE SUPABASE
+    // Cargamos peliculas desde Supabase
     private async cargarPeliculasDesdeDB(): Promise<void> {
         this.cargando.set(true);
 

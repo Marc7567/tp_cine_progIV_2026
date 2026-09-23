@@ -10,6 +10,7 @@ import { SearchBar } from '../../shared/componentes/search-bar/search-bar';
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
+
 export class Home {
   private peliculaService = inject(PeliculaService);
   private router = inject(Router);

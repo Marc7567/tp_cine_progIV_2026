@@ -81,3 +81,47 @@
 .back-btn:hover {
   background-color: #2980b9;
 }
+
+.funciones-section {
+  margin-top: 2rem;
+}
+
+.funciones-section h2 {
+  margin-bottom: 1rem;
+}
+
+.funciones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.funcion-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.funcion-horario {
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.funcion-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.funcion-info span {
+  white-space: nowrap;
+}
+
+.sin-funciones {
+  opacity: 0.8;
+}

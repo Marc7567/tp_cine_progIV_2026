@@ -1,29 +1,55 @@
 <section class="detail-container">
   @if (pelicula(); as peliculaActual) {
     <div class="detail-card">
-        <!-- Poster de la pelicula  -->
+      <!-- Poster de la película -->
       <img
         [src]="peliculaActual.imagen"
         [attr.alt]="'Póster de ' + peliculaActual.titulo"
         class="detail-cover"
       />
-        
-        <!-- Detalles de la pelicula -->
+
+      <!-- Detalles de la película -->
       <div class="detail-info">
         <h1>{{ peliculaActual.titulo }}</h1>
         <p class="detail-synopsis">{{ peliculaActual.sinopsis }}</p>
-        <p class="detail-duration">Duracion: {{ peliculaActual.duracion_minutos | duracion }}</p>
-        <p class="detail-age">Edad minima: {{ peliculaActual.edad_minima | edadMinima }}</p>
-        <p class="detail-release">Fecha de estreno: {{ peliculaActual.fecha_estreno | fechaEstreno}}</p>
+        <p class="detail-duration">Duración: {{ peliculaActual.duracion_minutos | duracion }}</p>
+        <p class="detail-age">Edad mínima: {{ peliculaActual.edad_minima | edadMinima }}</p>
+        <p class="detail-release">
+          Fecha de estreno: {{ peliculaActual.fecha_estreno | fechaEstreno }}
+        </p>
       </div>
     </div>
+
+    <!-- Funciones disponibles -->
+    <section class="funciones-section">
+      <h2>Funciones disponibles</h2>
+      @if (funciones().length > 0) {
+        <div class="funciones-list">
+          @for (funcion of funciones(); track funcion.id_funcion) {
+            <article class="funcion-card">
+              <div class="funcion-horario">
+                <strong> {{ funcion.hora_inicio | hora}} - {{ funcion.hora_fin | hora}} </strong>
+              </div>
+
+              <div class="funcion-info">
+                <span>{{ funcion.fecha | fechaEstreno}}</span>
+                <span>{{ funcion.modalidad }}</span>
+                <span>{{ funcion.idioma }}</span>
+                <span>${{ funcion.precio_base }}</span>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <p class="sin-funciones">No hay funciones disponibles para esta película.</p>
+      }
+    </section>
   } @else {
     <div class="not-found">
-      <h2>Pelicula no encontrada</h2>
-      <p>La pelicula con ID "{{ id() }}" no existe en el catálogo.</p>
+      <p>La pelicula con ID "{{ id() }}" no existe en el catalogo.</p>
     </div>
   }
 
-  <!-- boton para volver al home -->
-  <button class="back-btn" (click)="volver()">← Volver al Catalago</button>
+  <!-- Boton para volver al home -->
+  <button class="back-btn" (click)="volver()">Volver al Catálogo</button>
 </section>
