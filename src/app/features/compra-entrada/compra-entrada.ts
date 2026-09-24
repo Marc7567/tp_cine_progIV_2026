@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PeliculaService } from '../../core/services/pelicula.service';
 import { FuncionesService } from '../../core/services/funciones.service';
 import { ButacasService } from '../../core/services/butacas.service';
+import { ButacaDisponibilidad } from '../../core/models/butaca.interface';
 import { FechaEstrenoPipe } from '../../shared/pipes/fecha-estreno.pipe';
 import { HoraPipe } from '../../shared/pipes/hora.pipe';
 
