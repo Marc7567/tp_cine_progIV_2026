@@ -67,15 +67,11 @@
   width: 32px;
   height: 32px;
   padding: 0;
-
   border: none;
   border-radius: 6px;
-
   cursor: pointer;
-
   font-size: 0.65rem;
   font-weight: bold;
-
   background: #15d5d8;
   color: black;
 }

@@ -1,0 +1,76 @@
+<section class="resumen-compra">
+  <h2>Resumen de su compra:</h2>
+
+  <!-- datos den comprador -->
+  @if (comprador(); as compradorActual) {
+    <div class="comprador-resumen">
+      <h3>Datos del comprador:</h3>
+      <p><strong>Nombre: </strong> {{ compradorActual.nombre }} {{ compradorActual.apellido }}</p>
+      <p><strong>DNI: </strong> {{ compradorActual.dni }}</p>
+      <p><strong>Email: </strong> {{ compradorActual.email }}</p>
+    </div>
+  }
+
+  @if (pelicula(); as peliculaActual) {
+    <div class="pelicula-resumen">
+      <img [src]="peliculaActual.imagen" [alt]="peliculaActual.titulo" />
+
+      <div>
+        <p><strong>Pelicula:</strong>{{ peliculaActual.titulo }}</p>
+
+        @if (funcion(); as funcionActual) {
+          <p><strong>Fecha:</strong>{{ funcionActual.fecha }}</p>
+          <p>
+            <strong>Horario:</strong>
+            {{ funcionActual.hora_inicio }} -{{ funcionActual.hora_fin }}
+          </p>
+          <p><strong>Sala:</strong>{{ funcionActual.id_sala }}</p>
+          <p><strong>Modalidad:</strong>{{ funcionActual.modalidad }}</p>
+          <p><strong>Idioma:</strong>{{ funcionActual.idioma }}</p>
+        }
+      </div>
+    </div>
+  }
+  
+  <!-- datos de la funcion y la butaca -->
+  @if (butaca(); as butacaActual) {
+    <div class="butaca-resumen">
+      @if (funcion(); as funcionActual) {
+        <p><strong>Butaca: </strong>{{ butacaActual.fila }}{{ butacaActual.columna }}</p>
+        <p><strong>Tipo: </strong>{{ butacaActual.tipo }}</p> 
+        <p><strong>Precio del fucnion: </strong>${{ funcionActual.precio_base }}</p>
+        <p><strong>precio butaca: </strong>${{ butacaActual.precio_extra }}</p>
+      }
+    </div>
+
+    <!-- productos comprador (si es que compro) -->
+    @if (productos().length > 0 || combos().length > 0) {
+      <div class="candy-resumen">
+        @if (combos().length > 0) {
+          <h4>Combos</h4>
+          <ul>
+            @for (seleccionado of combos(); track seleccionado.combo.id_combo) {
+              <li>
+                {{ seleccionado.cantidad }} x {{ seleccionado.combo.nombre }} - ${{ seleccionado.combo.precio * seleccionado.cantidad }}
+              </li>
+            }
+          </ul>
+        }
+        
+        @if (productos().length > 0) {
+          <h4>Productos:</h4>
+          <ul>
+            @for (seleccionado of productos(); track seleccionado.producto.id_producto) {
+              <li>
+                {{ seleccionado.cantidad }} x {{ seleccionado.producto.nombre }} - ${{ seleccionado.producto.precio * seleccionado.cantidad }}
+              </li>
+            }
+          </ul>
+        }
+        <p><strong>Total: </strong> ${{ totalCandyBar() }}</p>
+      </div>
+      
+    }
+    <p><strong>Total de la compra: </strong>${{ totalCompra() }}</p>
+  }
+</section>

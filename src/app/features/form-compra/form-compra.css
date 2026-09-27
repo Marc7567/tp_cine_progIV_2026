@@ -1,0 +1,93 @@
+.form-compra-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* datos del comprador */
+.datos-comprador {
+  padding: 2rem;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.datos-comprador h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.datos-comprador > p {
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+/* formulario */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.campo label {
+  font-weight: 600;
+}
+
+.campo input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo input:focus {
+  border-color: #ff6f00;
+  box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.15);
+}
+
+/* Error */
+.error {
+  margin: 0;
+  color: #c62828;
+  font-size: 0.9rem;
+}
+
+/* boton */
+.continuar-btn {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background: #ff6f00;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.continuar-btn:hover:not(:disabled) {
+  background: #e65100;
+  transform: translateY(-1px);
+}
+
+.continuar-btn:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
+}
+
+/* pantalla no encontrada */
+.not-found {
+  padding: 2rem;
+  text-align: center;
+}

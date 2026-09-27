@@ -1,0 +1,104 @@
+<section class="form-compra-container">
+  @if (cargando()) {
+    <p>Cargando informacion de la compra...</p>
+  } @else if (funcion(); as funcionActual) {
+    <!-- DATOS DEL COMPRADOR -->
+    <section class="datos-comprador">
+      <h1>Datos de compra</h1>
+      <p>Ingrese sus datos para efectuar la compra</p>
+
+      <form [formGroup]="formularioCompra">
+        <!-- NOMBRE -->
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input 
+            id="nombre" 
+            type="text" 
+            formControlName="nombre" 
+            placeholder="Ingrese su nombre" 
+          />
+
+          @if (formularioCompra.controls.nombre.touched && formularioCompra.controls.nombre.invalid) {
+            <p class="error">debe tener entre 2 y 20 caracteres.</p>
+          }
+        </div>
+
+        <!-- APELLIDO -->
+        <div class="campo">
+          <label for="apellido">Apellido</label>
+          <input
+            id="apellido"
+            type="text"
+            formControlName="apellido"
+            placeholder="Ingrese su apellido"
+          />
+
+          @if (formularioCompra.controls.apellido.touched && formularioCompra.controls.apellido.invalid) {
+            <p class="error">El apellido debe tener entre 2 y 50 caracteres.</p>
+          }
+        </div>
+
+        <!-- DNI -->
+        <div class="campo">
+          <label for="dni">DNI</label>
+          <input 
+            id="dni" 
+            type="text" 
+            formControlName="dni" 
+            placeholder="Ingrese su DNI" 
+          />
+
+          @if (formularioCompra.controls.dni.touched && formularioCompra.controls.dni.invalid) {
+            <p class="error">El DNI debe tener 7 u 8 dígitos.</p>
+          }
+        </div>
+
+        <!-- EMAIL -->
+        <div class="campo">
+          <label for="email">Email</label>
+          <input 
+            id="email" 
+            type="email" 
+            formControlName="email" 
+            placeholder="Ingrese su email" 
+          />
+
+          @if (formularioCompra.controls.email.touched && formularioCompra.controls.email.invalid) {
+            <p class="error">Debe ingresar un email válido.</p>
+          }
+        </div>
+
+        <!-- boton continuar, 
+         muestra un resumen de la compra si todo los datos estan validados -->
+        <button 
+            type="button" 
+            class="continuar-btn" 
+            (click)="irResumenCompra()"
+        >
+          Continuar
+        </button>
+      </form>
+    </section>
+
+    <!-- Resumen de compra -->
+    @if (mostrarResumen()) {
+      @if (pelicula(); as peliculaActual) {
+        @if (butaca(); as butacaActual) {
+          <app-resumen-compra
+            [funcion]="funcionActual"
+            [pelicula]="peliculaActual"
+            [butaca]="butacaActual"
+            [comprador]="formularioCompra.value"
+            [productos]="productosComprados()"
+            [combos]="combosComprados()"
+            [totalCandyBar]="totalCandyBar()"
+          />
+        }
+      }
+    }
+  } @else {
+    <div class="not-found">
+      <h2>Datos no encontrados</h2>
+    </div>
+  }
+</section>

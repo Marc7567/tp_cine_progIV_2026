@@ -23,6 +23,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/compra-entrada/compra-entrada').then(c => c.CompraEntrada)
   },
   {
+    path: 'candy-bar/:idFuncion/:idButaca',
+    loadComponent: () => import('./features/candy-bar/candy-bar').then(c => c.CandyBar)
+  },
+  {
+    path: 'form-compra/:idFuncion/:idButaca',
+    loadComponent: () => import('./features/form-compra/form-compra').then(c => c.FormCompra)
+  },
+  {
     path: '**',
     redirectTo: '/home'
   }

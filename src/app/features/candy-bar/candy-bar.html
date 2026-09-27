@@ -1,0 +1,154 @@
+<section class="candy-container">
+  <header class="candy-header">
+    <h1>Candy Bar</h1>
+    <p>¿Querés agregar algunos productos a tu compra?</p>
+  </header>
+
+  @if (cargando()) {
+    <p class="cargando">Cargando productos...</p>
+  } @else {
+    <!-- COMBOS -->
+
+    @if (combosDisponibles().length > 0) {
+      <section class="combos-section">
+        <h2>Combos destacados</h2>
+        <p>Elegí un combo para acompañar tu película.</p>
+
+        <section class="combos-lista">
+          @for (combo of combosDisponibles(); track combo.id_combo) {
+            <article class="combo-card">
+              @if (combo.imagen) {
+                <img [src]="combo.imagen" [alt]="combo.nombre" class="producto-imagen" />
+              }
+              <h3>{{ combo.nombre }}</h3>
+              <p>{{ combo.descripcion }}</p>
+
+              <strong>Incluye:</strong>
+              <ul>
+                <li>
+                  {{ combo.cantidad_entradas }}
+                  {{ combo.cantidad_entradas === 1 ? 'entrada' : 'entradas' }}
+                </li>
+                @for (producto of obtenerProductosDeCombo(combo); track producto.id_producto) {
+                  <li>
+                    {{ cantidadProductoEnCombo(combo, producto)}} {{ producto.nombre }}
+                  </li>
+                }
+              </ul>
+
+              <strong> ${{ combo.precio }} </strong>
+
+              <button type="button" class="agregar-btn" (click)="agregarCombo(combo)">
+                Agregar combo
+              </button>
+            </article>
+          }
+        </section>
+      </section>
+    }
+
+    <!-- mostrar prpductos -->
+    @if (productosPorCategoria().length > 0) {
+      <section class="productos-section">
+        <h2>Productos</h2>
+        @for (grupo of productosPorCategoria(); track grupo.categoria) {
+          <section class="categoria">
+            <h3>{{ grupo.categoria }}</h3>
+
+            <div class="productos-lista">
+              @for (producto of grupo.productos; track producto.id_producto) {
+                <article class="producto-card">
+                  @if (producto.imagen) {
+                    <img [src]="producto.imagen" [alt]="producto.nombre" class="producto-imagen" />
+                  }
+                  <h4>{{ producto.nombre }}</h4>
+                  @if (producto.descripcion) {
+                    <p>{{ producto.descripcion }}</p>
+                  }
+
+                  <p>Stock disponible: {{ producto.stock }}</p>
+                  <strong> ${{ producto.precio }} </strong>
+
+                  <button
+                    type="button"
+                    class="agregar-btn"
+                    (click)="agregarProducto(producto)"
+                    [disabled]="cantidadProducto(producto.id_producto) >= producto.stock"
+                  >
+                    Agregar producto
+                  </button>
+                </article>
+              }
+            </div>
+          </section>
+        }
+      </section>
+    }
+
+    <!-- sin productos disponibles -->
+    @if (combosDisponibles().length === 0 && productosPorCategoria().length === 0) {
+      <section class="sin-productos">
+        <h2>Candy Bar no disponible</h2>
+        <p>Actualmente no hay productos disponibles.</p>
+      </section>
+    }
+
+    <!-- carrito de compra -->
+    <section class="carrito-section">
+      <h2>Tu carrito</h2>
+      @if (cantidadTotal() > 0) {
+        <button type="button" class="vaciar-btn" (click)="vaciarCarrito()">Vaciar carrito</button>
+      }
+
+      @if (cantidadTotal() === 0) {
+        <p>Carrito vacio.</p>
+      } @else {
+        <div class="carrito-lista">
+          @for (seleccionado of productosSeleccionados(); track seleccionado.producto.id_producto) {
+            <article class="carrito-item">
+              <h3>{{ seleccionado.producto.nombre }}</h3>
+              <p>Cantidad: <strong>{{ seleccionado.cantidad }}</strong></p>
+              <p>Precio: <strong>${{ seleccionado.producto.precio * seleccionado.cantidad }}</strong></p>
+
+              <button type="button" (click)="quitarProductoDelCarrito(seleccionado.producto)">
+                −
+              </button>
+              <span>{{ seleccionado.cantidad }}</span>
+
+              <button
+                type="button"
+                (click)="agregarProducto(seleccionado.producto)"
+                [disabled]="seleccionado.cantidad >= seleccionado.producto.stock"
+              >
+                +
+              </button>
+            </article>
+          }
+
+          @for (seleccionado of combosSeleccionados(); track seleccionado.combo.id_combo) {
+            <article class="carrito-item">
+              <h3>{{ seleccionado.combo.nombre }}</h3>
+              <p>Combo</p>
+              <p>Cantidad: <strong>{{ seleccionado.cantidad }}</strong></p>
+
+              <strong> ${{ seleccionado.combo.precio * seleccionado.cantidad }} </strong>
+              <button type="button" (click)="quitarComboDelCarrito(seleccionado.combo)">−</button>
+
+              <span>{{ seleccionado.cantidad }}</span>
+              <button type="button" (click)="agregarCombo(seleccionado.combo)">+</button>
+            </article>
+          }
+        </div>
+
+        <p class="carrito-total">Total: <strong>${{ total() }}</strong></p>        
+      }
+    </section>
+    <button 
+      type="button" 
+      class="continuar-btn" 
+      (click)="irFormulario()"
+    >
+      continuar
+    </button>
+  }
+</section>
