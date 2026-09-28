@@ -21,7 +21,7 @@
                 @for (resena of resenas(); track resena.id_resena) {
                 <div class="resena">
                     <p>{{ '⭐'.repeat(resena.estrellas) }}</p>
-                    <p>Usuario: {{ resena.usuario?.nombre }} {{ resena.usuario?.apellido }}</p>
+                    <p>{{ resena.usuario?.nombre }} {{ resena.usuario?.apellido }}</p>
 
                     @if (resena.comentario) {
                         <p>{{ resena.comentario }}</p>

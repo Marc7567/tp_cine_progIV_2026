@@ -4,17 +4,15 @@ import { PeliculaService } from '../../core/services/pelicula.service';
 import { ResenaService } from '../../core/services/resena.service';
 import { Resena } from '../../core/models/resenas.interface';
 
-import { EdadMinimaPipe } from '../../shared/pipes/edad-minima.pipe';
-import { DuracionPipe } from '../../shared/pipes/duracion.pipe';
-import { FechaEstrenoPipe } from '../../shared/pipes/fecha-estreno.pipe';
 import { FechaResenaPipe } from '../../shared/pipes/resena.pipe'
 
 @Component({
-  imports: [EdadMinimaPipe, DuracionPipe, FechaEstrenoPipe, FechaResenaPipe],
+  imports: [FechaResenaPipe],
   selector: 'app-resenas',
   styleUrl: './resenas.css',
   templateUrl: './resenas.html',
 })
+
 export class Resenas {
   id = input.required<string>();
 

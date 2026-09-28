@@ -10,7 +10,6 @@ import { CompraService } from '../../core/services/compra.service';
   templateUrl: './generar-pdf.html',
   styleUrl: './generar-pdf.css',
 })
-
 export class GenerarPdf implements OnInit {
   private compraService = inject(CompraService);
   private router = inject(Router);
@@ -30,25 +29,16 @@ export class GenerarPdf implements OnInit {
     }
 
     try {
-      const qr = await QRCode.toDataURL(compraActual.codigoCompra, {
-        width: 200,
-        margin: 1,
-      });
+      const qr = await QRCode.toDataURL(compraActual.codigoCompra, { width: 200, margin: 1 });
 
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
       let y = 20;
 
       pdf.setFont('helvetica', 'bold');
       pdf.setFontSize(18);
 
-      pdf.text('TICKET DE CINE', 105, y, {
-        align: 'center',
-      });
+      pdf.text('ticket del cine', 105, y, { align: 'center' });
 
       y += 10;
 
@@ -60,25 +50,21 @@ export class GenerarPdf implements OnInit {
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(10);
 
-      pdf.text(`Código: ${compraActual.codigoCompra}`, 30, y);
+      pdf.text(`Codigo: ${compraActual.codigoCompra}`, 30, y);
 
       y += 10;
 
       pdf.setFont('helvetica', 'bold');
       pdf.setFontSize(12);
 
-      pdf.text('COMPRADOR', 30, y);
+      pdf.text('Datos del comprador', 30, y);
 
       y += 7;
 
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(10);
 
-      pdf.text(
-        `Nombre: ${compraActual.comprador.nombre} ${compraActual.comprador.apellido}`,
-        30,
-        y,
-      );
+      pdf.text(`Nombre: ${compraActual.comprador.nombre} ${compraActual.comprador.apellido}`, 30, y);
 
       y += 6;
 
@@ -92,14 +78,12 @@ export class GenerarPdf implements OnInit {
 
       pdf.setFont('helvetica', 'bold');
       pdf.setFontSize(12);
-
-      pdf.text('FUNCION', 30, y);
+      pdf.text('Funcion', 30, y);
 
       y += 7;
 
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(10);
-
       pdf.text(`Película: ${compraActual.pelicula.titulo}`, 30, y);
 
       y += 6;
@@ -108,11 +92,7 @@ export class GenerarPdf implements OnInit {
 
       y += 6;
 
-      pdf.text(
-        `Horario: ${compraActual.funcion.hora_inicio} - ${compraActual.funcion.hora_fin}`,
-        30,
-        y,
-      );
+      pdf.text(`Horario: ${compraActual.funcion.hora_inicio} - ${compraActual.funcion.hora_fin}`, 30, y);
 
       y += 6;
 
@@ -132,7 +112,7 @@ export class GenerarPdf implements OnInit {
         pdf.setFont('helvetica', 'bold');
         pdf.setFontSize(12);
 
-        pdf.text('CANDY BAR', 30, y);
+        pdf.text('Candy Bar', 30, y);
 
         y += 7;
 
@@ -140,25 +120,20 @@ export class GenerarPdf implements OnInit {
         pdf.setFontSize(10);
 
         for (const combo of compraActual.combos) {
-          const subtotal = combo.combo.precio * combo.cantidad;
+          const totalCombos = combo.combo.precio * combo.cantidad;
 
           pdf.text(`${combo.cantidad} x ${combo.combo.nombre}`, 30, y);
-
-          pdf.text(`$${subtotal}`, 170, y, {
-            align: 'right',
-          });
+          pdf.text(`$${totalCombos}`, 170, y, { align: 'right' });
 
           y += 6;
         }
 
         for (const producto of compraActual.productos) {
-          const subtotal = producto.producto.precio * producto.cantidad;
+          const totalProductos = producto.producto.precio * producto.cantidad;
 
           pdf.text(`${producto.cantidad} x ${producto.producto.nombre}`, 30, y);
 
-          pdf.text(`$${subtotal}`, 170, y, {
-            align: 'right',
-          });
+          pdf.text(`$${totalProductos}`, 170, y, { align: 'right' });
 
           y += 6;
         }
@@ -167,7 +142,6 @@ export class GenerarPdf implements OnInit {
       }
 
       pdf.setLineWidth(0.5);
-
       pdf.line(30, y, 180, y);
 
       y += 9;
@@ -176,18 +150,12 @@ export class GenerarPdf implements OnInit {
       pdf.setFontSize(14);
 
       pdf.text('TOTAL:', 30, y);
-
-      pdf.text(`$${compraActual.totalCompra}`, 170, y, {
-        align: 'right',
-      });
+      pdf.text(`$${compraActual.totalCompra}`, 170, y, { align: 'right' });
 
       y += 15;
 
       pdf.setFontSize(10);
-
-      pdf.text('Código QR de la compra', 105, y, {
-        align: 'center',
-      });
+      pdf.text('Codigo QR de la compra', 105, y, { align: 'center' });
 
       y += 5;
 
@@ -198,10 +166,7 @@ export class GenerarPdf implements OnInit {
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(9);
 
-      pdf.text('Presentar este ticket para validar la entrada.', 105, y, {
-        align: 'center',
-      });
-
+      pdf.text('Presentar este ticket para validar la entrada.', 105, y, { align: 'center' });
       pdf.save('ticket.pdf');
 
       this.pdfGenerado.set(true);

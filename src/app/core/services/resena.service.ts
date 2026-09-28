@@ -12,11 +12,9 @@ export class ResenaService {
     async obtenerResenas(idPelicula: number, limite?: number): Promise<Resena[]> {
         let consulta = this.supabase
             .from('resenas')
-            .select(`*,
-                usuarios (nombre, apellido)
-            `)
+            .select(`*, usuarios (nombre, apellido)`)
             .eq('id_pelicula', idPelicula)
-            .order('fecha', { ascending: false });
+            .order('fecha', { ascending: false });;
 
         if (limite) {
             consulta = consulta.limit(limite);
