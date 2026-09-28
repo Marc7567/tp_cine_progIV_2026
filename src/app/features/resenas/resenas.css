@@ -1,0 +1,42 @@
+.resenas {
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.pelicula-info {
+    display: flex;
+    gap: 30px;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.pelicula-info img {
+    width: 220px;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.pelicula-datos {
+    flex: 1;
+}
+
+.pelicula-datos h1 {
+    font-size: 30px;
+    margin-top: 0;
+}
+
+.lista-resenas {
+    margin-top: 30px;
+}
+
+.resena {
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    background: #8080802c;
+}

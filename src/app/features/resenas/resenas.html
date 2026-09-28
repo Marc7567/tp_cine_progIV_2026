@@ -1,0 +1,39 @@
+<section class="resenas">
+    @if (pelicula()) {
+        <button type="button" (click)="volver()">Volver al menu</button>
+        <!-- info pelicula -->
+        <div class="pelicula-info">
+            <img [src]="pelicula().imagen" [alt]="pelicula().titulo" />
+            
+            <div class="pelicula-datos">
+                <h1>{{ pelicula().titulo }}</h1>
+                <p>{{ pelicula().sinopsis }}</p>
+
+                <h3>⭐ {{ promedio() }} / 5</h3>
+                <p>cantidad de resenas: {{ cantidad() }}</p>
+            </div>
+        </div>
+
+        <!-- resenas -->
+        <div class="lista-resenas">
+            <h2>resenas</h2>
+            @if (resenas().length > 0) {
+                @for (resena of resenas(); track resena.id_resena) {
+                <div class="resena">
+                    <p>{{ '⭐'.repeat(resena.estrellas) }}</p>
+                    <p>Usuario: {{ resena.usuario?.nombre }} {{ resena.usuario?.apellido }}</p>
+
+                    @if (resena.comentario) {
+                        <p>{{ resena.comentario }}</p>
+                    }
+                    <p>{{ resena.fecha | fechaResena}}</p>
+                </div>
+                }
+            } @else {
+                <p>No hay resenas para esta pelicula.</p>
+            }
+        </div>
+    } @else {
+        <p>No se encontro la pelicula.</p>
+    }
+</section>

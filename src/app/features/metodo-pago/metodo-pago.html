@@ -27,8 +27,9 @@
               />
 
               @if (formularioTarjeta.controls.titular.touched && formularioTarjeta.controls.titular.invalid){
-                <p class="error">Ingrese el nombre del titular.</p>
+                <p>Ingrese el nombre del titular.</p>
               }
+              
               <label for="numero"> Numero de tarjeta </label>
               <input
                 id="numero"
@@ -39,7 +40,7 @@
               />
 
               @if (formularioTarjeta.controls.numero.touched && formularioTarjeta.controls.numero.invalid) {
-                <p class="error">Ingrese un número de tarjeta válido de 10 dígitos.</p>
+                <p>Ingrese un número de tarjeta válido de 10 dígitos.</p>
               }
             </form>
           </div>

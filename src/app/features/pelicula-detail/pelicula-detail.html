@@ -15,12 +15,36 @@
         <p class="detail-synopsis">{{ peliculaActual.sinopsis }}</p>
         <p class="detail-duration">Duracion:{{ peliculaActual.duracion_minutos | duracion }}</p>
         <p class="detail-age">Edad minima:{{ peliculaActual.edad_minima | edadMinima }}</p>
-        <p class="detail-release">Fecha de estreno:{{ peliculaActual.fecha_estreno | fechaEstreno }}</p>
+        <p class="detail-release">
+          Fecha de estreno:{{ peliculaActual.fecha_estreno | fechaEstreno }}
+        </p>
       </div>
     </div>
 
+    <!-- resenas -->
+    <div>
+      <h2>⭐ {{ promedio() }} / 5</h2>
+      <p>Cantidad de resenas: {{ cantidadResenas() }}</p>
+
+      @if (resenas().length > 0) {
+        @for (resena of resenas(); track resena.id_resena) {
+          <div>
+            <p>{{ '⭐'.repeat(resena.estrellas) }}</p>
+
+            @if (resena.comentario) {
+              <p>{{ resena.comentario }}</p>
+            }
+          </div>
+        }
+
+        <button type="button" (click)="verResenas()">Ver resenas</button>
+      } @else {
+        <p>No hay resenas para esta pelicula.</p>
+      }
+    </div>
+
     <!-- Funciones disponibles -->
-    <section class="funciones-section">
+    <div class="funciones-section">
       <h2>Funciones disponibles</h2>
 
       @if (funciones().length > 0) {
@@ -28,9 +52,7 @@
           @for (funcion of funciones(); track funcion.id_funcion) {
             <article class="funcion-card">
               <div class="funcion-horario">
-                <strong>
-                  {{ funcion.hora_inicio | hora }} - {{ funcion.hora_fin | hora }}
-                </strong>
+                <strong> {{ funcion.hora_inicio | hora }} - {{ funcion.hora_fin | hora }} </strong>
               </div>
 
               <div class="funcion-info">
@@ -53,7 +75,7 @@
       } @else {
         <p class="sin-funciones">No hay funciones disponibles.</p>
       }
-    </section>
+    </div>
   } @else {
     <div class="not-found">
       <p>La película con ID "{{ id() }}" no existe en el catálogo.</p>
