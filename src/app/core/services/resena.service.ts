@@ -32,6 +32,7 @@ export class ResenaService {
             estrellas: resena.estrellas,
             comentario: resena.comentario,
             fecha: resena.fecha,
+
             usuario: resena.usuarios
         }));
     }

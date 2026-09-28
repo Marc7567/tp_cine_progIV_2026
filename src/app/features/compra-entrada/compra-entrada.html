@@ -16,6 +16,7 @@
             <p>Sala: {{ funcionActual.id_sala }}</p>
             <p>Modalidad: {{ funcionActual.modalidad }}</p>
             <p>Idioma: {{ funcionActual.idioma }}</p>
+            <p>Precio funcion: {{ funcionActual.precio }}</p>
           </div>
         </div>
       </div>
@@ -52,12 +53,12 @@
 
     @if (butacaSeleccionadaDatos(); as butaca) {
       <div class="seleccion-resumen">
-        <h2>Butaca seleccionada</h2>
-        <p>
-          Butaca:<strong>{{ butaca.fila }}{{ butaca.columna }}</strong>
-        </p>
+        <h2>Butaca selecionada</h2>
+        <p>Butaca:<strong>{{ butaca.fila }}{{ butaca.columna }}</strong></p>
         <p>Tipo:<strong>{{ butaca.tipo }}</strong></p>
-        <p>Total a pagar:<strong>${{ funcionActual.precio_base + butaca.precio_extra }}</strong></p>
+        @if (butaca.precio_extra > 0) {
+          <p>Precio:<strong>${{ butaca.precio_extra }}</strong></p>
+        }
 
         <!-- Boton para continuar con la compra (ingresa al formulario de compra) -->
         <button
