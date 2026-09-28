@@ -3,7 +3,7 @@
     <p>Cargando información de la función...</p>
   } @else if (funcion(); as funcionActual) {
     @if (pelicula(); as peliculaActual) {
-      <section class="compra-resumen">
+      <div class="compra-resumen">
         <h1>Comprar entrada</h1>
 
         <div class="pelicula-resumen">
@@ -11,39 +11,25 @@
 
           <div>
             <h2>{{ peliculaActual.titulo }}</h2>
-
             <p>Fecha:{{ funcionActual.fecha | fechaEstreno }}</p>
             <p>Horario: {{ funcionActual.hora_inicio | hora }} - {{ funcionActual.hora_fin | hora }}</p>
             <p>Sala: {{ funcionActual.id_sala }}</p>
             <p>Modalidad: {{ funcionActual.modalidad }}</p>
             <p>Idioma: {{ funcionActual.idioma }}</p>
-            <p>Precio de la funcion: ${{ funcionActual.precio_base }}</p>
           </div>
         </div>
-      </section>
+      </div>
     }
 
-    <section class="butacas-section">
+    <div class="butacas-section">
       <h2>Elegí tu butaca</h2>
       
       <!-- Mostramos los tipos de butacas que hay -->
       <div class="leyenda">
-        <span>
-          <i class="leyenda-color normal"></i>
-          Normales
-        </span>
-        <span>
-          <i class="leyenda-color accesible"></i>
-          Accesible para discapacitados
-        </span>
-        <span>
-          <i class="leyenda-color vip"></i>
-          VIP
-        </span>
-        <span>
-          <i class="leyenda-color ocupada"></i>
-          Ocupadas
-        </span>
+        <span><i class="leyenda-color normal"></i>Normales</span>
+        <span><i class="leyenda-color accesible"></i>Accesible para discapacitados</span>
+        <span><i class="leyenda-color vip"></i>VIP</span>
+        <span><i class="leyenda-color ocupada"></i>Ocupadas</span>
       </div>
 
       <div class="butacas-mapa">
@@ -62,16 +48,16 @@
           </button>
         }
       </div>
-    </section>
+    </div>
 
     @if (butacaSeleccionadaDatos(); as butaca) {
-      <section class="seleccion-resumen">
+      <div class="seleccion-resumen">
         <h2>Butaca seleccionada</h2>
         <p>
-          Butaca: <strong>{{ butaca.fila }}{{ butaca.columna }}</strong>
+          Butaca:<strong>{{ butaca.fila }}{{ butaca.columna }}</strong>
         </p>
-        <p>Tipo: <strong>{{ butaca.tipo }}</strong></p>
-        <p>Total a pagar: <strong>${{ butaca.precio_extra }}</strong></p>
+        <p>Tipo:<strong>{{ butaca.tipo }}</strong></p>
+        <p>Total a pagar:<strong>${{ funcionActual.precio_base + butaca.precio_extra }}</strong></p>
 
         <!-- Boton para continuar con la compra (ingresa al formulario de compra) -->
         <button
@@ -81,13 +67,13 @@
         >
           Continuar compra
         </button>
-      </section>
+      </div>
     }
     } @else {
-    <section class="not-found">
+    <div class="not-found">
       <h2>Función no encontrada</h2>
       <p>No se pudo encontrar la función solicitada.</p>
-    </section>
+    </div>
   }
   <button type="button" class="back-btn" (click)="volver()">Volver</button>
 </section>
