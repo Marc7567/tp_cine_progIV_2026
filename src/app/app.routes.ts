@@ -15,14 +15,6 @@ export const routes: Routes = [
     }]
   },
   {
-    path: 'proximamente',
-    loadComponent: () => import('./features/proximamente/proximamente').then(c => c.Proximamente)
-  },
-  {
-    path: 'resenas/:id',
-    loadComponent: () => import('./features/resenas/resenas').then(c => c.Resenas)
-  },
-  {
     path: 'compra-entrada/:idFuncion',
     loadComponent: () => import('./features/compra-entrada/compra-entrada').then(c => c.CompraEntrada)
   },
@@ -41,6 +33,14 @@ export const routes: Routes = [
   {
     path: 'generar-pdf',
     loadComponent: () => import('./features/generar-pdf/generar-pdf').then(c => c.GenerarPdf)
+  },
+  {
+    path: 'proximamente',
+    loadComponent: () => import('./features/proximamente/proximamente').then(c => c.Proximamente)
+  },
+  {
+    path: 'resenas/:id',
+    loadComponent: () => import('./features/resenas/resenas').then(c => c.Resenas)
   },
   {
     path: '**',

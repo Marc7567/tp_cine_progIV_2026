@@ -12,13 +12,14 @@ export class ResenaService {
     async obtenerResenas(idPelicula: number, limite?: number): Promise<Resena[]> {
         let consulta = this.supabase
             .from('resenas')
-            .select(`*, usuarios (nombre, apellido)`)
+            .select(`*, usuarios (nombre, apellido) `)
             .eq('id_pelicula', idPelicula)
-            .order('fecha', { ascending: false });;
+            .order('fecha', { ascending: false });
 
         if (limite) {
             consulta = consulta.limit(limite);
         }
+
         const { data, error } = await consulta;
 
         if (error) {
@@ -32,8 +33,8 @@ export class ResenaService {
             estrellas: resena.estrellas,
             comentario: resena.comentario,
             fecha: resena.fecha,
-
-            usuario: resena.usuarios
+            nombre_publico: resena.nombre_publico,
+            usuario: resena.usuarios,
         }));
     }
 
@@ -52,17 +53,18 @@ export class ResenaService {
             .eq('id_pelicula', idPelicula);
 
         if (error) {
-            return {promedio: 0, cantidad: 0};
+            return { promedio: 0, cantidad: 0 };
         }
+
         const cantidad = data?.length ?? 0;
 
         if (cantidad === 0) {
-            return {promedio: 0, cantidad: 0};
+            return { promedio: 0, cantidad: 0 };
         }
 
-        const suma = data.reduce((total, resena) => total + resena.estrellas, 0);
+        const suma = data.reduce((total, resena) => total + Number(resena.estrellas), 0);
 
-        return {promedio: Number((suma / cantidad).toFixed(1)), cantidad};
+        return { promedio: Number((suma / cantidad).toFixed(1)), cantidad };
     }
 
     async guardarResena(
@@ -72,19 +74,49 @@ export class ResenaService {
         comentario: string,
     ): Promise<Resena | null> {
         const { data, error } = await this.supabase
+        .from('resenas')
+        .upsert(
+            {
+            id_usuario: idUsuario,
+            id_pelicula: idPelicula,
+            estrellas,
+            comentario: comentario.trim() || null,
+            nombre_publico: null,
+            },
+            {onConflict: 'id_usuario,id_pelicula' },
+        )
+        .select()
+        .single();
+
+        if (error) {
+            return null;
+        }
+
+        return data;
+    }
+
+    async guardarResenaPublica(
+        idPelicula: number,
+        estrellas: number,
+        comentario: string,
+        nombrePublico: string,
+        ): Promise<Resena | null> {
+        const { data, error } = await this.supabase
             .from('resenas')
-            .upsert({
-                id_usuario: idUsuario,
+            .insert({
+                id_usuario: null,
                 id_pelicula: idPelicula,
                 estrellas,
-                comentario: comentario.trim() || null},{
-                    onConflict: 'id_usuario,id_pelicula'})
+                comentario: comentario.trim() || null,
+                nombre_publico: nombrePublico.trim() || null,
+            })
             .select()
             .single();
 
         if (error) {
             return null;
         }
+
         return data;
     }
 }
