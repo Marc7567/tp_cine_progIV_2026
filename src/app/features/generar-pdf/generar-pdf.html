@@ -1,0 +1,14 @@
+<section class="generar-pdf">
+  @if (pdfGenerado()) {
+    <div class="mensaje">
+      <h1>¡Compra realizada con éxito!</h1>
+      <p>Se generó correctamente el PDF de su compra.</p>
+      <button type="button" class="boton" (click)="VolverMenu()">Volver al menu</button>
+    </div>
+  } @else {
+    <div class="mensaje">
+      <h1>Generando PDF...</h1>
+      <p>Espere un momento.</p>
+    </div>
+  }
+</section>

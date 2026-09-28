@@ -38,8 +38,8 @@
       @if (funcion(); as funcionActual) {
         <p><strong>Butaca: </strong>{{ butacaActual.fila }}{{ butacaActual.columna }}</p>
         <p><strong>Tipo: </strong>{{ butacaActual.tipo }}</p> 
-        <p><strong>Precio del fucnion: </strong>${{ funcionActual.precio_base }}</p>
-        <p><strong>precio butaca: </strong>${{ butacaActual.precio_extra }}</p>
+        <p><strong>Precio de la funcion: </strong>${{ funcionActual.precio_base }}</p>
+        <p><strong>Precio butaca: </strong>${{ butacaActual.precio_extra }}</p>
       }
     </div>
 
@@ -71,6 +71,22 @@
       </div>
       
     }
-    <p><strong>Total de la compra: </strong>${{ totalCompra() }}</p>
+    <p><strong>Total de su compra: </strong>${{ totalCompra() }}</p>
+    <div class="acciones-compra">
+      <button
+        type="button"
+        class="boton"
+      >
+        Cancelar compra
+      </button>
+
+      <button
+        type="button"
+        class="boton"
+        (click)="continuarAlPago()"
+      >
+        Continuar con el pago
+      </button>
+    </div>
   }
 </section>

@@ -1,0 +1,59 @@
+<section class="pago">
+  <h1>Metodo de pago</h1>
+  @if (!pagoRealizado()) {
+    @if (!metodoSeleccionado()) {
+      <div class="panel">
+        <h2>Seleccione el metodo de pago</h2>
+
+        <div class="metodos">
+          <button type="button" class="boton" (click)="seleccionarMetodo('tarjeta')">
+            Tarjeta
+          </button>
+        </div>
+      </div>
+    } @else {
+      @if (metodoSeleccionado() === 'tarjeta') {
+        <div class="panel">
+          <div class="datos-tarjeta">
+            <h2>Pago con tarjeta</h2>
+
+            <form [formGroup]="formularioTarjeta">
+              <label for="titular"> Nombre del titular </label>
+              <input
+                id="titular"
+                type="text"
+                formControlName="titular"
+                placeholder="Ingrese el nombre del titular"
+              />
+
+              @if (formularioTarjeta.controls.titular.touched && formularioTarjeta.controls.titular.invalid){
+                <p class="error">Ingrese el nombre del titular.</p>
+              }
+              <label for="numero"> Numero de tarjeta </label>
+              <input
+                id="numero"
+                type="text"
+                maxlength="10"
+                formControlName="numero"
+                placeholder="Ingrese 10 dígitos"
+              />
+
+              @if (formularioTarjeta.controls.numero.touched && formularioTarjeta.controls.numero.invalid) {
+                <p class="error">Ingrese un número de tarjeta válido de 10 dígitos.</p>
+              }
+            </form>
+          </div>
+
+          <p class="total">Total a pagar:<strong>${{ total() }}</strong></p>
+          <button type="button" class="boton" (click)="pagar()">Confirmar pago</button>
+        </div>
+      }
+    }
+  } @else {
+    <div class="panel">
+      <h2>Pago realizado</h2>
+      <p>Total: <strong>${{ total() }}</strong></p>
+      <button type="button" class="boton" (click)="generarPDF()">Finalizar compra</button>
+    </div>
+  }
+</section>

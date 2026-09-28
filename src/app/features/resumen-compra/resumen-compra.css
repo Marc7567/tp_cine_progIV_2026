@@ -11,7 +11,7 @@
   margin-bottom: 1.5rem;
 }
 
-/* DATOS DEL COMPRADOR */
+/* comprador datos */
 .comprador-resumen {
   padding-bottom: 1.5rem;
   margin-bottom: 1.5rem;
@@ -27,7 +27,7 @@
 }
 
 
-/* DATOS DE LA PELÍCULA */
+/* pelicula datos */
 .pelicula-resumen {
   display: flex;
   gap: 1.5rem;
@@ -48,7 +48,7 @@
 }
 
 
-/* DATOS DE LA BUTACA */
+/* butaca datos */
 .butaca-resumen {
   margin-top: 1.5rem;
   padding-bottom: 1.5rem;
@@ -60,7 +60,7 @@
 }
 
 
-/* CANDY BAR */
+/* candy bar */
 .candy-resumen {
   margin-top: 1.5rem;
   padding-bottom: 1.5rem;
@@ -84,11 +84,29 @@
   margin-top: 1rem;
 }
 
-/* TOTAL DE TODA LA COMPRA */
-.butaca-resumen+.candy-resumen+p {
+/* botones */
+.boton {
+    display: block;
+    width: 250px;
+    margin: 20px auto 0;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton:hover {
+    transform: scale(1.03);
+}
+
+.butaca-resumen + .candy-resumen + p {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   text-align: right;
   font-size: 1.4rem;
   border-top: 2px solid #ddd;
 }
+
+

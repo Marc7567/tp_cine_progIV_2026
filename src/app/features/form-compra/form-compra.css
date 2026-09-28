@@ -91,3 +91,7 @@ form {
   padding: 2rem;
   text-align: center;
 }
+
+.pago-btn:hover, .cancelar-btn:hover {
+  transform: scale(1.03);
+}

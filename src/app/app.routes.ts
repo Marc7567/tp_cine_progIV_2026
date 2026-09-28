@@ -31,6 +31,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/form-compra/form-compra').then(c => c.FormCompra)
   },
   {
+    path: 'metodo-pago',
+    loadComponent: () => import('./features/metodo-pago/metodo-pago').then(c => c.MetodoPago)
+  },
+  {
+    path: 'generar-pdf',
+    loadComponent: () => import('./features/generar-pdf/generar-pdf').then(c => c.GenerarPdf)
+  },
+  {
     path: '**',
     redirectTo: '/home'
   }

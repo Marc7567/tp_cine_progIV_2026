@@ -2,7 +2,10 @@
   @if (cargando()) {
     <p>Cargando informacion de la compra...</p>
   } @else if (funcion(); as funcionActual) {
-    <!-- DATOS DEL COMPRADOR -->
+    @if (!mostrarResumen()) {
+    <!-- formulario -->
+
+    <!-- ingresar datos del comprador -->
     <section class="datos-comprador">
       <h1>Datos de compra</h1>
       <p>Ingrese sus datos para efectuar la compra</p>
@@ -79,7 +82,7 @@
         </button>
       </form>
     </section>
-
+    }
     <!-- Resumen de compra -->
     @if (mostrarResumen()) {
       @if (pelicula(); as peliculaActual) {
