@@ -22,11 +22,16 @@ export class MetodoPago {
   formularioTarjeta = new FormGroup({
     titular: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(3)],
+      validators: [
+        Validators.required, 
+        Validators.minLength(3)
+      ],
     }),
     numero: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.pattern(/^\d{10}$/)],
+      validators: [
+        Validators.required, 
+        Validators.pattern(/^\d{10}$/)],
     }),
   });
 

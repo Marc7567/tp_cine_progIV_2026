@@ -27,6 +27,7 @@
           <p><strong>Sala:</strong>{{ funcionActual.id_sala }}</p>
           <p><strong>Modalidad:</strong>{{ funcionActual.modalidad }}</p>
           <p><strong>Idioma:</strong>{{ funcionActual.idioma }}</p>
+          <p><strong>Precio de la funcion: </strong>${{ funcionActual.precio_base }}</p>
         }
       </div>
     </div>
@@ -38,8 +39,9 @@
       @if (funcion(); as funcionActual) {
         <p><strong>Butaca: </strong>{{ butacaActual.fila }}{{ butacaActual.columna }}</p>
         <p><strong>Tipo: </strong>{{ butacaActual.tipo }}</p> 
-        <p><strong>Precio de la funcion: </strong>${{ funcionActual.precio_base }}</p>
-        <p><strong>Precio butaca: </strong>${{ butacaActual.precio_extra }}</p>
+        @if (butacaActual.precio_extra > 0) {
+          <p>Precio:<strong>${{ butacaActual.precio_extra }}</strong></p>
+        }
       }
     </div>
 
