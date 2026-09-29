@@ -1,8 +1,8 @@
 export interface pelicula {
   id_pelicula: number;
   titulo: string;
-  imagen: string;
-  sinopsis: string;
+  imagen: string | null;
+  sinopsis: string | null;
   duracion_minutos: number;
   fecha_estreno: string;
   edad_minima: number;

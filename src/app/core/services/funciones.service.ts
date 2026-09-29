@@ -1,13 +1,17 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { Funcion } from '../models/funcion.interface';
+import { PreventaService } from './preventa.service';
+import { PeliculaService } from './pelicula.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 
 export class FuncionesService {
     private supabase = inject(SupabaseService).client;
+    private preventaService = inject(PreventaService);
+    private peliculaService = inject(PeliculaService);
     private funcionesSignal = signal<Funcion[]>([]);
 
     cargando = signal(false);
@@ -24,16 +28,24 @@ export class FuncionesService {
             .order('hora_inicio', { ascending: true });
 
         if (error) {
-            console.error('Error al cargar funciones desde Supabase:', error.message);
             this.funcionesSignal.set([]);
         } else {
-            this.funcionesSignal.set(data || []);
-            console.log(`Se cargaron ${data?.length || 0} funciones para la película ${idPelicula}`);
+            const peliculaActual = this.peliculaService
+                .peliculas()
+                .find((pelicula) => pelicula.id_pelicula === idPelicula);
+
+            const funcionesPreparadas = await Promise.all(
+                (data || []).map((funcion: Funcion) =>
+                    this.preventaService.prepararFuncion(funcion, peliculaActual)
+                )
+            );
+
+            this.funcionesSignal.set(funcionesPreparadas);
         }
+
             this.cargando.set(false);
     }
 
-    // obtenemos los datos de cada funcion 
     async obtenerFuncionPorId(idFuncion: number): Promise<Funcion | null> {
         const { data, error } = await this.supabase
             .from('funciones')
@@ -42,9 +54,13 @@ export class FuncionesService {
             .single();
 
         if (error) {
-            console.error('Error al obtener la función:', error.message);
             return null;
         }
-        return data;
+
+        const peliculaActual = this.peliculaService
+            .peliculas()
+            .find((pelicula) => pelicula.id_pelicula === data.id_pelicula);
+
+        return this.preventaService.prepararFuncion(data as Funcion, peliculaActual);
     }
 }

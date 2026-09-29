@@ -2,10 +2,6 @@
   padding: 2rem;
 }
 
-.compra-resumen {
-  margin-bottom: 2rem;
-}
-
 .pelicula-resumen {
   display: flex;
   gap: 1.5rem;
@@ -57,6 +53,18 @@
   background: #c62828;
 }
 
+.compra-resumen {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.seleccion-resumen {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
 .butacas-mapa {
   display: grid;
   grid-template-columns: repeat(28, 32px);
@@ -92,10 +100,6 @@
 .butaca.seleccionada {
   outline: 3px solid white;
   box-shadow: 0 0 0 2px black;
-}
-
-.seleccion-resumen {
-  margin-top: 2rem;
 }
 
 .continuar-btn {

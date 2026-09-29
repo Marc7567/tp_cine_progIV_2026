@@ -1,8 +1,13 @@
 <section class="compra-container">
   @if (cargando()) {
-    <p>Cargando información de la función...</p>
+    <p>Cargando funciones...</p>
   } @else if (funcion(); as funcionActual) {
-    @if (pelicula(); as peliculaActual) {
+    @if (ventaNoDisponible()) {
+      <div class="not-found">
+        <h2>Venta no disponible todavía</h2>
+        <p>Esta función todavía no está habilitada para la compra.</p>
+      </div>
+    } @else if (pelicula(); as peliculaActual) {
       <div class="compra-resumen">
         <h1>Comprar entrada</h1>
 
@@ -11,70 +16,71 @@
 
           <div>
             <h2>{{ peliculaActual.titulo }}</h2>
-            <p>Fecha:{{ funcionActual.fecha | fechaEstreno }}</p>
+            <p>Fecha: {{ funcionActual.fecha | fechaEstreno }}</p>
             <p>Horario: {{ funcionActual.hora_inicio | hora }} - {{ funcionActual.hora_fin | hora }}</p>
             <p>Sala: {{ funcionActual.id_sala }}</p>
             <p>Modalidad: {{ funcionActual.modalidad }}</p>
             <p>Idioma: {{ funcionActual.idioma }}</p>
-            <p>Precio funcion: {{ funcionActual.precio }}</p>
+            <p>Precio función: ${{ funcionActual.precio_venta ?? funcionActual.precio_base }}</p>
+            @if (funcionActual.estado_venta === 'preventa') {
+              <p>Precio de preventa</p>
+            }
           </div>
         </div>
       </div>
-    }
 
-    <div class="butacas-section">
-      <h2>Elegí tu butaca</h2>
-      
-      <!-- Mostramos los tipos de butacas que hay -->
-      <div class="leyenda">
-        <span><i class="leyenda-color normal"></i>Normales</span>
-        <span><i class="leyenda-color accesible"></i>Accesible para discapacitados</span>
-        <span><i class="leyenda-color vip"></i>VIP</span>
-        <span><i class="leyenda-color ocupada"></i>Ocupadas</span>
+      <!-- mostrar butacas -->
+      <div class="butacas-section">
+        <h2>Elegí tu butaca</h2>
+        <div class="leyenda">
+          <span><i class="leyenda-color normal"></i>Normales</span>
+          <span><i class="leyenda-color accesible"></i>Accesible para discapacitados</span>
+          <span><i class="leyenda-color vip"></i>VIP</span>
+          <span><i class="leyenda-color ocupada"></i>Ocupadas</span>
+        </div>
+
+        <div class="butacas-mapa">
+          @for (butaca of butacas(); track butaca.id_butaca) {
+            <button
+              type="button"
+              class="butaca"
+              [class.accesible]="butaca.tipo === 'accesible'"
+              [class.vip]="butaca.tipo === 'vip'"
+              [class.ocupada]="butaca.ocupada"
+              [class.seleccionada]="butacaSeleccionada() === butaca.id_butaca"
+              [disabled]="butaca.ocupada"
+              (click)="seleccionarButaca(butaca.id_butaca)"
+            >
+              {{ butaca.fila }}{{ butaca.columna }}
+            </button>
+          }
+        </div>
       </div>
 
-      <div class="butacas-mapa">
-        @for (butaca of butacas(); track butaca.id_butaca) {
+      @if (butacaSeleccionadaDatos(); as butaca) {
+        <div class="seleccion-resumen">
+          <h2>Butaca seleccionada</h2>
+          <p>Butaca: <strong>{{ butaca.fila }}{{ butaca.columna }}</strong></p>
+          <p>Tipo: <strong>{{ butaca.tipo }}</strong></p>
+          @if (butaca.precio_extra > 0) {
+            <p>Precio extra: <strong>${{ butaca.precio_extra }}</strong></p>
+          }
+
           <button
             type="button"
-            class="butaca"
-            [class.accesible]="butaca.tipo === 'accesible'"
-            [class.vip]="butaca.tipo === 'vip'"
-            [class.ocupada]="butaca.ocupada"
-            [class.seleccionada]="butacaSeleccionada() === butaca.id_butaca"
-            [disabled]="butaca.ocupada"
-            (click)="seleccionarButaca(butaca.id_butaca)"
+            class="continuar-btn"
+            (click)="irCandyBar()"
           >
-            {{ butaca.fila }}{{ butaca.columna }}
+            Continuar compra
           </button>
-        }
-      </div>
-    </div>
-
-    @if (butacaSeleccionadaDatos(); as butaca) {
-      <div class="seleccion-resumen">
-        <h2>Butaca selecionada</h2>
-        <p>Butaca:<strong>{{ butaca.fila }}{{ butaca.columna }}</strong></p>
-        <p>Tipo:<strong>{{ butaca.tipo }}</strong></p>
-        @if (butaca.precio_extra > 0) {
-          <p>Precio:<strong>${{ butaca.precio_extra }}</strong></p>
-        }
-
-        <!-- Boton para continuar con la compra (ingresa al formulario de compra) -->
-        <button
-          type="button"
-          class="continuar-btn"
-          (click)="irCandyBar()"
-        >
-          Continuar compra
-        </button>
-      </div>
+        </div>
+      }
     }
-    } @else {
-    <div class="not-found">
-      <h2>Función no encontrada</h2>
-      <p>No se pudo encontrar la función solicitada.</p>
+  } @else {
+    <div>
+      <p>Función no encontrada</p>
     </div>
   }
+
   <button type="button" class="back-btn" (click)="volver()">Volver</button>
 </section>

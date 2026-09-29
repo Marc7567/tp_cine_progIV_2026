@@ -10,36 +10,75 @@
 
       <!-- Detalles de la película -->
       <div class="detail-info">
+        <!-- Información de venta / preventa -->
+        <div class="venta-info">
+          @if (estadoVenta() === 'preventa') {
+            <p>Preventa disponible</p>
+          } @else if (estadoVenta() === 'normal') {
+            <p>Venta disponible</p>
+          } @else {
+            <p>Venta aun no disponible</p>
+          }
+        </div>
+
         <h1>{{ peliculaActual.titulo }}</h1>
 
-        <p class="detail-synopsis">{{ peliculaActual.sinopsis }}</p>
-        <p class="detail-duration">Duracion:{{ peliculaActual.duracion_minutos | duracion }}</p>
-        <p class="detail-age">Edad minima:{{ peliculaActual.edad_minima | edadMinima }}</p>
-        <p class="detail-release">
-          Fecha de estreno:{{ peliculaActual.fecha_estreno | fechaEstreno }}
-        </p>
+        <!-- Información de la película -->
+        <div class="detail-data">
+          <p>sinopsis: {{ peliculaActual.sinopsis }}</p>
+          <p>Duracion: {{ peliculaActual.duracion_minutos | duracion }}</p>
+          <p>Edad minima: {{ peliculaActual.edad_minima | edadMinima }}</p>
+          <p>Fecha de estreno: {{ peliculaActual.fecha_estreno | fechaEstreno }}</p>
+        </div>
+
+        <!-- Alerta de pelicula-->
+        @if (mostrarBotonAlerta()) {
+          <div class="alerta">
+            <button
+              type="button"
+              class="alerta-btn"
+              [disabled]="alertaActivada() || activandoAlerta()"
+              (click)="activarAlerta()"
+            >
+              {{
+                activandoAlerta()
+                  ? 'Activando alerta...'
+                  : alertaActivada()
+                    ? 'Alerta activada'
+                    : 'Avisarme cuando salgan las entradas'
+              }}
+            </button>
+          </div>
+        }
+
+        @if (mensajeAlerta()) {
+          <div class="mensaje-alerta">
+            <p>{{ mensajeAlerta() }}</p>
+          </div>
+        }
       </div>
     </div>
 
-    <!-- resenas -->
-    <div>
+    <!-- Resenas -->
+    <!-- Reseñas -->
+    <div class="resenas">
       <h2>⭐ {{ promedio() }} / 5</h2>
-      <p>Cantidad de resenas: {{ cantidadResenas() }}</p>
+      <p>Cantidad de reseñas: {{ cantidadResenas() }}</p>
 
       @if (resenas().length > 0) {
         @for (resena of resenas(); track resena.id_resena) {
-          <div>
+          <div class="resena">
+            <p>{{ resena.usuario?.nombre }} {{ resena.usuario?.apellido }}</p>
             <p>{{ '⭐'.repeat(resena.estrellas) }}</p>
-
             @if (resena.comentario) {
               <p>{{ resena.comentario }}</p>
             }
           </div>
         }
-
         <button type="button" (click)="verResenas()">Ver resenas</button>
       } @else {
         <p>No hay resenas para esta pelicula.</p>
+        <button type="button" (click)="verResenas()">Ver resenas</button>
       }
     </div>
 
@@ -52,22 +91,29 @@
           @for (funcion of funciones(); track funcion.id_funcion) {
             <article class="funcion-card">
               <div class="funcion-horario">
-                <strong> {{ funcion.hora_inicio | hora }} - {{ funcion.hora_fin | hora }} </strong>
+                <strong>{{ funcion.hora_inicio | hora }} - {{ funcion.hora_fin | hora }}</strong>
               </div>
 
               <div class="funcion-info">
-                <span>{{ funcion.fecha | fechaEstreno }}</span>
-                <span>{{ funcion.modalidad }}</span>
-                <span>{{ funcion.idioma }}</span>
-                <span> ${{ funcion.precio_base }} </span>
+                <p>{{ funcion.fecha | fechaEstreno }}</p>
+                <p>Sala {{ funcion.id_sala }}</p>
+                <p>{{ funcion.modalidad }}</p>
+                <p>{{ funcion.idioma }}</p>
+                <p>
+                  ${{ funcion.precio_venta ?? funcion.precio_base }}
+                  @if (funcion.estado_venta === 'preventa') {
+                    <small class="precio-preventa"> precio preventa </small>
+                  }
+                </p>
               </div>
 
               <button
                 type="button"
                 class="comprar-btn"
+                [disabled]="!funcion.puede_comprar"
                 (click)="comprarEntrada(funcion.id_funcion)"
               >
-                Comprar entrada
+                {{ funcion.puede_comprar ? 'Comprar entrada' : 'Venta no disponible' }}
               </button>
             </article>
           }

@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Funcion } from '../../core/models/funcion.interface';
 
 import { PeliculaService } from '../../core/services/pelicula.service';
 import { FuncionesService } from '../../core/services/funciones.service';
@@ -21,10 +22,11 @@ export class CompraEntrada {
   private funcionesService = inject(FuncionesService);
   private butacasService = inject(ButacasService);
 
-  funcion = signal<any | null>(null);
+  funcion = signal<Funcion | null>(null);
   butacaSeleccionada = signal<number | null>(null);
   butacas = this.butacasService.butacas;
   cargando = signal(true);
+  ventaNoDisponible = signal(false);
 
   pelicula = computed(() => {
     const funcionActual = this.funcion();
@@ -39,7 +41,6 @@ export class CompraEntrada {
   });
 
   // computed: al selecionar una butaca de la funcion
-  // toma 
   butacaSeleccionadaDatos = computed(() => {
     const idButaca = this.butacaSeleccionada();
 
@@ -47,9 +48,7 @@ export class CompraEntrada {
       return null;
     }
 
-    return this.butacas().find(
-      butaca => butaca.id_butaca === idButaca
-    ) ?? null;
+    return this.butacas().find((butaca) => butaca.id_butaca === idButaca) ?? null;
   });
 
   constructor() {
@@ -73,6 +72,13 @@ export class CompraEntrada {
     }
 
     this.funcion.set(funcion);
+
+    if (funcion.puede_comprar === false) {
+      this.ventaNoDisponible.set(true);
+      this.cargando.set(false);
+      return;
+    }
+
     await this.butacasService.cargarButacasPorFuncion(funcion.id_funcion, funcion.id_sala);
     this.cargando.set(false);
   }
@@ -93,7 +99,7 @@ export class CompraEntrada {
     if (idButaca === null) {
       return;
     }
-    
+
     if (!funcionActual) {
       return;
     }
