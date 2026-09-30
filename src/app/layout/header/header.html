@@ -6,7 +6,13 @@
   <!-- Navegación declarativa con routerLink -->
   <!-- routerLinkActive agrega la clase 'active' a la ruta actual -->
   <nav class="nav-links">
-    <a routerLink="/home" routerLinkActive="active">Inicio</a>
+    <a routerLink="/home" routerLinkActive="active">🏠 Inicio</a>
     <a routerLink="/proximamente" routerLinkActive="active">Proximamente</a>
+
+    @if (authService.currentUser()) {
+      <a type="button" (click)="logout()">🚪 Cerrar sesión</a>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">🔑 Iniciar sesion</a>
+    }
   </nav>
 </header>

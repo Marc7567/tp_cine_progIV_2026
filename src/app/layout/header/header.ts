@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-// import { AuthService } from '../../core/services/auth.service';
-// import { RoleDirective } from '../../shared/directives/role.directive';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   imports: [RouterLink, RouterLinkActive],
@@ -10,11 +9,11 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './header.html',
 })
 export class Header {
-  // authService = inject(AuthService);
-  // private router = inject(Router);
+  authService = inject(AuthService);
+  private router = inject(Router);
 
-  // async logout() {
-  //   await this.authService.signOut();
-  //   this.router.navigate(['/login']);
-  // }
+  async logout(): Promise<void> {
+    await this.authService.signOut();
+    await this.router.navigate(['/login']);
+  }
 }
