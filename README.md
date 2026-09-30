@@ -154,3 +154,5 @@ Decisiones Tecnicas:
 4) La compra de entradas durante la preventa estará disponible para los usuarios en general y no será exclusiva de usuarios registrados, ya que no se establece que sea exclusivo para usuarios registrados.
 
 5) No se establece que el usuario deba consultar obligatoriamente el detalle completo de una película antes de comprar entradas. El requerimiento únicamente establece que las reseñas y la puntuación promedio deberán poder consultarse antes de sacar las entradas.
+
+6) El usuario registrado podra editar sus datos perosnales (nombre, Apellido, fecha de nacimiento y su email)
