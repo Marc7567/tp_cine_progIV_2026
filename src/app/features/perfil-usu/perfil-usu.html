@@ -27,7 +27,7 @@
     <!-- Datos personales del usuario -->
     <section class="tarjeta perfil-datos">
       <div class="tarjeta-titulo">
-          <h2>Informacion de tu cuenta</h2>
+        <h2>Informacion de tu cuenta</h2>
         @if (!modoEdicion()) {
           <button type="button" class="boton-secundario" (click)="EditarPerfil()">Editar</button>
         }
@@ -54,12 +54,24 @@
               }
             </div>
 
-            <div class="campo">
-              <label for="fechaNacimiento">Fecha de nacimiento</label>
-              <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" />
-              @if (perfilForm.controls.fechaNacimiento.touched && perfilForm.controls.fechaNacimiento.invalid) {
-                <small>Ingrese tu fecha de nacimiento</small>
-              }
+              <div class="campo">
+                <label for="fechaNacimiento">Fecha de nacimiento</label>
+                <input id="fechaNacimiento" type="text" formControlName="fechaNacimiento" placeholder="dd/mm/yyyy" maxlength="10" inputmode="numeric" (input)="formatearFecha($event)">
+                @if (perfilForm.get('fechaNacimiento')?.touched && perfilForm.get('fechaNacimiento')?.invalid) {
+                    <small class="error-campo">
+                        @if (perfilForm.get('fechaNacimiento')?.hasError('required')) {
+                            La fecha de nacimiento es obligatoria.
+                        } @else if (perfilForm.get('fechaNacimiento')?.hasError('diaInvalido')) {
+                            el día no valido.
+                        } @else if (perfilForm.get('fechaNacimiento')?.hasError('mesInvalido')) {
+                            El mes no valido.
+                        } @else if (perfilForm.get('fechaNacimiento')?.hasError('fechaFutura')) {
+                            No puede ingresar una fecha futura.
+                        } @else {
+                            Ingresá la fecha con formato dd/mm/yyyy.
+                        }
+                    </small>
+                }
             </div>
 
             <div class="campo">
@@ -102,7 +114,7 @@
           <div class="dato">
             <span>Fecha de nacimiento</span>
             <strong>
-              {{ perfil()!.fecha_nacimiento | date:'dd/MM/yyyy'}}
+              {{ perfil()!.fecha_nacimiento | date: 'dd/MM/yyyy' }}
             </strong>
           </div>
 
@@ -115,20 +127,20 @@
     </section>
 
     <!-- Creditos y puntos -->
-      <div class="tarjeta beneficio">
-        <span class="beneficio-label">Credito disponible</span>
-        <strong class="beneficio-valor">${{ perfil()!.credito }}</strong>
-      </div>
+    <div class="tarjeta beneficio">
+      <span class="beneficio-label">Credito disponible</span>
+      <strong class="beneficio-valor">${{ perfil()!.credito }}</strong>
+    </div>
 
-      <div class="tarjeta beneficio">
-        <span class="beneficio-label">Puntos acumulados</span>
-        <strong class="beneficio-valor">{{ perfil()!.puntos }}</strong>
-      </div>
+    <div class="tarjeta beneficio">
+      <span class="beneficio-label">Puntos acumulados</span>
+      <strong class="beneficio-valor">{{ perfil()!.puntos }}</strong>
+    </div>
 
     <!-- historial de canjes -->
     <section class="tarjeta historial">
       <div class="tarjeta-titulo">
-          <h2>Historial de canjes</h2>
+        <h2>Historial de canjes</h2>
       </div>
 
       @if (canjes().length > 0) {
@@ -147,7 +159,7 @@
               <div class="item-datos">
                 <strong> -{{ canje.puntos_utilizados }} puntos </strong>
 
-                <span>{{ canje.fecha | date:'dd/MM/yyyy'}}</span>
+                <span>{{ canje.fecha | date: 'dd/MM/yyyy' }}</span>
                 <span
                   class="estado-canje"
                   [class.realizado]="canje.estado === 'realizado'"
@@ -189,7 +201,7 @@
                 <h2>{{ pelicula.titulo }}</h2>
                 <p>Funcion: {{ pelicula.fecha_funcion }} - {{ pelicula.hora_inicio }}</p>
                 @if (pelicula.fecha_uso) {
-                  <p>Vista: {{ pelicula.fecha_uso | date:'dd/MM/yyyy'}}</p>
+                  <p>Vista: {{ pelicula.fecha_uso | date: 'dd/MM/yyyy' }}</p>
                 }
                 @if (pelicula.estrellas) {
                   <div class="calificacion">

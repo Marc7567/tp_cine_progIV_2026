@@ -1,4 +1,4 @@
-<div class="auth-container">
+<section class="auth-container">
     <div class="auth-card">
         <h2>Crear Cuenta</h2>
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
@@ -11,10 +11,26 @@
                 <label for="apellido">Apellido</label>
                 <input id="apellido" type="text" formControlName="apellido" placeholder="Tu apellido">
             </div>
-
+            
+            <!-- validar fecha de nacimiento -->
             <div class="form-group">
                 <label for="fechaNacimiento">Fecha de nacimiento</label>
-                <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento">
+                <input id="fechaNacimiento" type="text" formControlName="fechaNacimiento" placeholder="dd/mm/yyyy" maxlength="10" inputmode="numeric" (input)="formatearFecha($event)">
+                @if (registerForm.get('fechaNacimiento')?.touched && registerForm.get('fechaNacimiento')?.invalid) {
+                    <small class="error-msg">
+                        @if (registerForm.get('fechaNacimiento')?.hasError('required')) {
+                            La fecha de nacimiento es obligatoria.
+                        } @else if (registerForm.get('fechaNacimiento')?.hasError('diaInvalido')) {
+                            el día no valido.
+                        } @else if (registerForm.get('fechaNacimiento')?.hasError('mesInvalido')) {
+                            El mes no valido.
+                        } @else if (registerForm.get('fechaNacimiento')?.hasError('fechaFutura')) {
+                            No puede ingresar una fecha futura.
+                        } @else {
+                            Ingresá la fecha con formato dd/mm/yyyy.
+                        }
+                    </small>
+                }
             </div>
 
             <div class="form-group">
@@ -49,4 +65,4 @@
             ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesion aqui</a>
         </p>
     </div>
-</div>
+</section>

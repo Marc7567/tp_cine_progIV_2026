@@ -28,7 +28,7 @@ export const routes: Routes = [
   },
   {
     path: 'perfil',
-    loadComponent: () => import('./features/perfil/perfil').then(c => c.PerfilComponent)
+    loadComponent: () => import('./features/perfil-usu/perfil-usu').then(c => c.PerfilUsu)
   },
   {
     path: 'resenas/:id',

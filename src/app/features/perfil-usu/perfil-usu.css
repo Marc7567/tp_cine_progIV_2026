@@ -23,7 +23,7 @@
     background: #fff;
     padding: 25px;
     margin-bottom: 25px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .tarjeta-titulo {
@@ -35,7 +35,7 @@
 }
 
 .tarjeta-titulo h2 {
-    margin: 0;
+    margin: 0px;
 }
 
 .tarjeta-titulo p {
