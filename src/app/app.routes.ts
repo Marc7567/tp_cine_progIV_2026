@@ -27,6 +27,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/proximamente/proximamente').then(c => c.Proximamente)
   },
   {
+    path: 'perfil',
+    loadComponent: () => import('./features/perfil/perfil').then(c => c.PerfilComponent)
+  },
+  {
     path: 'resenas/:id',
     loadComponent: () => import('./features/resenas/resenas').then(c => c.Resenas)
   },

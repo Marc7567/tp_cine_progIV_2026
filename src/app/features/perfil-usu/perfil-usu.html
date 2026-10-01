@@ -1,0 +1,213 @@
+<section class="perfil-page">
+  @if (cargando()) {
+    <div class="estado">
+      <p>Cargando perfil...</p>
+    </div>
+  } @else if (error() && !perfil()) {
+    <div class="estado error">
+      <p>{{ error() }}</p>
+      <button type="button" (click)="volverHome()">Volver al inicio</button>
+    </div>
+  } @else if (perfil()) {
+    <div class="perfil-header">
+      <h1>Mi perfil</h1>
+    </div>
+
+    @if (mensaje()) {
+      <div class="mensaje-exito">
+        {{ mensaje() }}
+      </div>
+    }
+    @if (error()) {
+      <div class="mensaje-error">
+        {{ error() }}
+      </div>
+    }
+
+    <!-- Datos personales del usuario -->
+    <section class="tarjeta perfil-datos">
+      <div class="tarjeta-titulo">
+          <h2>Informacion de tu cuenta</h2>
+        @if (!modoEdicion()) {
+          <button type="button" class="boton-secundario" (click)="EditarPerfil()">Editar</button>
+        }
+      </div>
+
+      @if (modoEdicion()) {
+        <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()">
+          <div class="form-grid">
+            <div class="campo">
+              <label for="nombre"> Nombre </label>
+              <input id="nombre" type="text" formControlName="nombre" />
+
+              @if (perfilForm.controls.nombre.touched && perfilForm.controls.nombre.invalid) {
+                <small> Ingresá un nombre válido. </small>
+              }
+            </div>
+
+            <div class="campo">
+              <label for="apellido">Apellido</label>
+              <input id="apellido" type="text" formControlName="apellido" />
+
+              @if (perfilForm.controls.apellido.touched && perfilForm.controls.apellido.invalid) {
+                <small>Ingrese un apellido válido</small>
+              }
+            </div>
+
+            <div class="campo">
+              <label for="fechaNacimiento">Fecha de nacimiento</label>
+              <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" />
+              @if (perfilForm.controls.fechaNacimiento.touched && perfilForm.controls.fechaNacimiento.invalid) {
+                <small>Ingrese tu fecha de nacimiento</small>
+              }
+            </div>
+
+            <div class="campo">
+              <label>Correo electronico</label>
+              <input type="email" [value]="perfil()!.email" readonly />
+            </div>
+          </div>
+
+          <div class="acciones-formulario">
+            <button type="submit" class="boton-principal" [disabled]="guardando()">
+              @if (guardando()) {
+                Guardando...
+              } @else {
+                Guardar cambios
+              }
+            </button>
+
+            <button
+              type="button"
+              class="boton-cancelar"
+              (click)="cancelarEdicion()"
+              [disabled]="guardando()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      } @else {
+        <div class="datos-grid">
+          <div class="dato">
+            <span>Nombre</span>
+            <strong>{{ perfil()!.nombre }}</strong>
+          </div>
+
+          <div class="dato">
+            <span>Apellido</span>
+            <strong>{{ perfil()!.apellido }}</strong>
+          </div>
+
+          <div class="dato">
+            <span>Fecha de nacimiento</span>
+            <strong>
+              {{ perfil()!.fecha_nacimiento | date:'dd/MM/yyyy'}}
+            </strong>
+          </div>
+
+          <div class="dato">
+            <span>Correo electrónico</span>
+            <strong>{{ perfil()!.email }}</strong>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- Creditos y puntos -->
+      <div class="tarjeta beneficio">
+        <span class="beneficio-label">Credito disponible</span>
+        <strong class="beneficio-valor">${{ perfil()!.credito }}</strong>
+      </div>
+
+      <div class="tarjeta beneficio">
+        <span class="beneficio-label">Puntos acumulados</span>
+        <strong class="beneficio-valor">{{ perfil()!.puntos }}</strong>
+      </div>
+
+    <!-- historial de canjes -->
+    <section class="tarjeta historial">
+      <div class="tarjeta-titulo">
+          <h2>Historial de canjes</h2>
+      </div>
+
+      @if (canjes().length > 0) {
+        <div class="lista">
+          @for (canje of canjes(); track canje.id_canje) {
+            <article class="item">
+              <div class="item-info">
+                <h3>{{ canje.recompensa.nombre }}</h3>
+
+                @if (canje.recompensa.descripcion) {
+                  <p>{{ canje.recompensa.descripcion }}</p>
+                }
+                <span> Tipo: {{ canje.recompensa.tipo }} </span>
+              </div>
+
+              <div class="item-datos">
+                <strong> -{{ canje.puntos_utilizados }} puntos </strong>
+
+                <span>{{ canje.fecha | date:'dd/MM/yyyy'}}</span>
+                <span
+                  class="estado-canje"
+                  [class.realizado]="canje.estado === 'realizado'"
+                  [class.pendiente]="canje.estado === 'pendiente'"
+                  [class.cancelado]="canje.estado === 'cancelado'"
+                >
+                  {{ canje.estado }}
+                </span>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="vacio">
+          <p>Todavía no realizaste ningún canje.</p>
+        </div>
+      }
+    </section>
+
+    <!-- mis peliculas (peliculas que viste) -->
+    <section class="tarjeta peliculas">
+      <div class="tarjeta-titulo">
+        <div>
+          <h2>Mis peliculas</h2>
+          <p>Películas que viste y tus propias calificaciones.</p>
+        </div>
+      </div>
+
+      @if (peliculasVistas().length > 0) {
+        <div class="peliculas-grid">
+          @for (pelicula of peliculasVistas(); track pelicula.id_entrada) {
+            <article class="pelicula-item">
+              @if (pelicula.imagen) {
+                <img [src]="pelicula.imagen" [alt]="pelicula.titulo" />
+              } @else {
+                <div class="sin-imagen">Sin imagen</div>
+              }
+              <div class="pelicula-info">
+                <h2>{{ pelicula.titulo }}</h2>
+                <p>Funcion: {{ pelicula.fecha_funcion }} - {{ pelicula.hora_inicio }}</p>
+                @if (pelicula.fecha_uso) {
+                  <p>Vista: {{ pelicula.fecha_uso | date:'dd/MM/yyyy'}}</p>
+                }
+                @if (pelicula.estrellas) {
+                  <div class="calificacion">
+                    <p>Tu calificación:</p>
+                    <strong>{{ '⭐'.repeat(pelicula.estrellas) }}</strong>
+                  </div>
+                } @else {
+                  <p class="sin-calificacion">Todavía no calificaste esta película.</p>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="vacio">
+          <p>Todavía no tenés películas vistas.</p>
+        </div>
+      }
+    </section>
+  }
+</section>
