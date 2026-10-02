@@ -32,15 +32,17 @@
       </div>
     </div>
   }
-  
+
   <!-- datos de la funcion y la butaca -->
   @if (butaca(); as butacaActual) {
     <div class="butaca-resumen">
       @if (funcion(); as funcionActual) {
         <p><strong>Butaca: </strong>{{ butacaActual.fila }}{{ butacaActual.columna }}</p>
-        <p><strong>Tipo: </strong>{{ butacaActual.tipo }}</p> 
+        <p><strong>Tipo: </strong>{{ butacaActual.tipo }}</p>
         @if (butacaActual.precio_extra > 0) {
-          <p>Precio:<strong>${{ butacaActual.precio_extra }}</strong></p>
+          <p>
+            Precio:<strong>${{ butacaActual.precio_extra }}</strong>
+          </p>
         }
       }
     </div>
@@ -53,42 +55,43 @@
           <ul>
             @for (seleccionado of combos(); track seleccionado.combo.id_combo) {
               <li>
-                {{ seleccionado.cantidad }} x {{ seleccionado.combo.nombre }} - ${{ seleccionado.combo.precio * seleccionado.cantidad }}
+                {{ seleccionado.cantidad }} x {{ seleccionado.combo.nombre }} - ${{
+                  seleccionado.combo.precio * seleccionado.cantidad
+                }}
               </li>
             }
           </ul>
         }
-        
+
         @if (productos().length > 0) {
           <h4>Productos:</h4>
           <ul>
             @for (seleccionado of productos(); track seleccionado.producto.id_producto) {
               <li>
-                {{ seleccionado.cantidad }} x {{ seleccionado.producto.nombre }} - ${{ seleccionado.producto.precio * seleccionado.cantidad }}
+                {{ seleccionado.cantidad }} x {{ seleccionado.producto.nombre }} - ${{
+                  seleccionado.producto.precio * seleccionado.cantidad
+                }}
               </li>
             }
           </ul>
         }
         <p><strong>Total: </strong> ${{ totalCandyBar() }}</p>
       </div>
-      
     }
-    <p><strong>Total de su compra: </strong>${{ totalCompra() }}</p>
-    <div class="acciones-compra">
-      <button
-        type="button"
-        class="boton"
-      >
-        Cancelar compra
-      </button>
+    <div class="resumen-total">
+      <p>Total: ${{ totalCompra() }}</p>
+      @if (esPrimeraCompra()) {
+        <p class="descuento-primera-compra">
+          Descuento del 20% por 1ra compra (-${{ descuentoPrimeraCompra() }})
+        </p>
+      }
+      <h2>Total con descuento: ${{ totalFinal() }}</h2>
+    </div>
 
-      <button
-        type="button"
-        class="boton"
-        (click)="continuarAlPago()"
-      >
-        Continuar con el pago
-      </button>
+    <div class="acciones-compra">
+      <button type="button" class="boton">Cancelar compra</button>
+
+      <button type="button" class="boton" (click)="continuarAlPago()">Continuar con el pago</button>
     </div>
   }
 </section>
