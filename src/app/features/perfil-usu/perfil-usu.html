@@ -18,6 +18,7 @@
         {{ mensaje() }}
       </div>
     }
+
     @if (error()) {
       <div class="mensaje-error">
         {{ error() }}
@@ -28,6 +29,7 @@
     <section class="tarjeta perfil-datos">
       <div class="tarjeta-titulo">
         <h2>Informacion de tu cuenta</h2>
+
         @if (!modoEdicion()) {
           <button type="button" class="boton-secundario" (click)="EditarPerfil()">Editar</button>
         }
@@ -37,46 +39,55 @@
         <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()">
           <div class="form-grid">
             <div class="campo">
-              <label for="nombre"> Nombre </label>
-              <input id="nombre" type="text" formControlName="nombre" />
+              <label for="nombre">Nombre</label>
+              <input id="nombre" type="text" formControlName="nombre"/>
 
               @if (perfilForm.controls.nombre.touched && perfilForm.controls.nombre.invalid) {
-                <small> Ingresá un nombre válido. </small>
+                <small> Ingrese un nombre válido</small>
               }
             </div>
 
             <div class="campo">
               <label for="apellido">Apellido</label>
-              <input id="apellido" type="text" formControlName="apellido" />
+              <input id="apellido" type="text" formControlName="apellido"/>
 
               @if (perfilForm.controls.apellido.touched && perfilForm.controls.apellido.invalid) {
-                <small>Ingrese un apellido válido</small>
+                <small> Ingrese un apellido válido</small>
               }
             </div>
 
-              <div class="campo">
-                <label for="fechaNacimiento">Fecha de nacimiento</label>
-                <input id="fechaNacimiento" type="text" formControlName="fechaNacimiento" placeholder="dd/mm/yyyy" maxlength="10" inputmode="numeric" (input)="formatearFecha($event)">
-                @if (perfilForm.get('fechaNacimiento')?.touched && perfilForm.get('fechaNacimiento')?.invalid) {
-                    <small class="error-campo">
-                        @if (perfilForm.get('fechaNacimiento')?.hasError('required')) {
-                            La fecha de nacimiento es obligatoria.
-                        } @else if (perfilForm.get('fechaNacimiento')?.hasError('diaInvalido')) {
-                            el día no valido.
-                        } @else if (perfilForm.get('fechaNacimiento')?.hasError('mesInvalido')) {
-                            El mes no valido.
-                        } @else if (perfilForm.get('fechaNacimiento')?.hasError('fechaFutura')) {
-                            No puede ingresar una fecha futura.
-                        } @else {
-                            Ingresá la fecha con formato dd/mm/yyyy.
-                        }
-                    </small>
-                }
+            <div class="campo">
+              <label for="fechaNacimiento">Fecha de nacimiento</label>
+              <input
+                id="fechaNacimiento"
+                type="text"
+                formControlName="fechaNacimiento"
+                placeholder="dd/mm/yyyy"
+                maxlength="10"
+                inputmode="numeric"
+                (input)="formatearFecha($event)"
+              />
+
+              @if (perfilForm.get('fechaNacimiento')?.touched && perfilForm.get('fechaNacimiento')?.invalid) {
+                <small class="error-campo">
+                  @if (perfilForm.get('fechaNacimiento')?.hasError('required')) {
+                    La fecha de nacimiento es obligatoria.
+                  } @else if (perfilForm.get('fechaNacimiento')?.hasError('diaInvalido')) {
+                    el día no es válido.
+                  } @else if (perfilForm.get('fechaNacimiento')?.hasError('mesInvalido')) {
+                    El mes no es válido.
+                  } @else if (perfilForm.get('fechaNacimiento')?.hasError('fechaFutura')) {
+                    No se puede ingresar una fecha futura.
+                  } @else {
+                    Ingrese la fecha con formato dd/mm/yyyy.
+                  }
+                </small>
+              }
             </div>
 
             <div class="campo">
-              <label>Correo electronico</label>
-              <input type="email" [value]="perfil()!.email" readonly />
+              <label> Correo electronico </label>
+              <input type="email" [value]="perfil()!.email" readonly/>
             </div>
           </div>
 
@@ -113,31 +124,79 @@
 
           <div class="dato">
             <span>Fecha de nacimiento</span>
-            <strong>
-              {{ perfil()!.fecha_nacimiento | date: 'dd/MM/yyyy' }}
-            </strong>
+            <strong>{{ perfil()!.fecha_nacimiento | date: 'dd/MM/yyyy' }}</strong>
           </div>
 
           <div class="dato">
-            <span>Correo electrónico</span>
+            <span> Correo electrónico </span>
             <strong>{{ perfil()!.email }}</strong>
           </div>
         </div>
       }
     </section>
 
-    <!-- Creditos y puntos -->
+    <!-- Credito -->
     <div class="tarjeta beneficio">
       <span class="beneficio-label">Credito disponible</span>
       <strong class="beneficio-valor">${{ perfil()!.credito }}</strong>
     </div>
 
+    <!-- Puntos -->
     <div class="tarjeta beneficio">
       <span class="beneficio-label">Puntos acumulados</span>
       <strong class="beneficio-valor">{{ perfil()!.puntos }}</strong>
     </div>
 
-    <!-- historial de canjes -->
+    <!-- Recompensas disponibles -->
+    <section class="tarjeta historial">
+      <div class="tarjeta-titulo">
+        <div>
+          <h2>Recompensas disponibles</h2>
+          <p>Puedes Canjear tus puntos por entradas o productos del Candy Bar</p>
+        </div>
+      </div>
+
+      @if (recompensas().length > 0) {
+        <div class="lista">
+          @for (recompensa of recompensas(); track recompensa.id_recompensa) {
+            <article class="item">
+              <div class="item-info">
+                <h2>{{ recompensa.nombre }}</h2>
+                @if (recompensa.descripcion) {
+                  <p>{{ recompensa.descripcion }}</p>
+                }
+                <p>Tipo: {{ recompensa.tipo }} </p>
+                @if (recompensa.valor !== null) {
+                  <p>Valor: ${{ recompensa.valor }}</p>
+                }
+              </div>
+
+              <div class="item-datos">
+                <strong>{{ recompensa.costo_puntos }} puntos</strong>
+                <button
+                  type="button"
+                  class="boton-principal"
+                  (click)="canjearRecompensa(recompensa.id_recompensa)"
+                  [disabled]="canjeando() !== null"
+                >
+                  @if (canjeando() === recompensa.id_recompensa) {
+                    Canjeando...
+                  } @else {
+                    Canjear
+                  }
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="vacio">
+          <p>No hay recompensas disponibles.</p>
+        </div>
+      }
+    </section>
+
+    <!-- Historial de canjes -->
     <section class="tarjeta historial">
       <div class="tarjeta-titulo">
         <h2>Historial de canjes</h2>
@@ -146,20 +205,19 @@
       @if (canjes().length > 0) {
         <div class="lista">
           @for (canje of canjes(); track canje.id_canje) {
-            <article class="item">
+            <div class="item">
               <div class="item-info">
                 <h3>{{ canje.recompensa.nombre }}</h3>
-
                 @if (canje.recompensa.descripcion) {
                   <p>{{ canje.recompensa.descripcion }}</p>
                 }
-                <span> Tipo: {{ canje.recompensa.tipo }} </span>
+                <p> Tipo: {{ canje.recompensa.tipo }} </p>
               </div>
 
               <div class="item-datos">
                 <strong> -{{ canje.puntos_utilizados }} puntos </strong>
-
                 <span>{{ canje.fecha | date: 'dd/MM/yyyy' }}</span>
+
                 <span
                   class="estado-canje"
                   [class.realizado]="canje.estado === 'realizado'"
@@ -169,22 +227,22 @@
                   {{ canje.estado }}
                 </span>
               </div>
-            </article>
+            </div>
           }
         </div>
       } @else {
         <div class="vacio">
-          <p>Todavía no realizaste ningún canje.</p>
+          <p>Todavia no realizaste ningún canje</p>
         </div>
       }
     </section>
 
-    <!-- mis peliculas (peliculas que viste) -->
+    <!-- Mis peliculas -->
     <section class="tarjeta peliculas">
       <div class="tarjeta-titulo">
         <div>
           <h2>Mis peliculas</h2>
-          <p>Películas que viste y tus propias calificaciones.</p>
+          <p>Peliculas que viste y tus propias calificaciones.</p>
         </div>
       </div>
 
@@ -197,19 +255,22 @@
               } @else {
                 <div class="sin-imagen">Sin imagen</div>
               }
+
               <div class="pelicula-info">
                 <h2>{{ pelicula.titulo }}</h2>
                 <p>Funcion: {{ pelicula.fecha_funcion }} - {{ pelicula.hora_inicio }}</p>
+
                 @if (pelicula.fecha_uso) {
                   <p>Vista: {{ pelicula.fecha_uso | date: 'dd/MM/yyyy' }}</p>
                 }
+
                 @if (pelicula.estrellas) {
                   <div class="calificacion">
-                    <p>Tu calificación:</p>
+                    <p>Tu calificacion:</p>
                     <strong>{{ '⭐'.repeat(pelicula.estrellas) }}</strong>
                   </div>
                 } @else {
-                  <p class="sin-calificacion">Todavía no calificaste esta película.</p>
+                  <p class="sin-calificacion">Todavia no calificaste esta pelicula</p>
                 }
               </div>
             </article>

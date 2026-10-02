@@ -7,7 +7,7 @@ export interface Perfil {
     email: string;
     credito: number;
     puntos: number;
-    primera_compra_realizada: boolean;
+    primera_compra: boolean;
     creado_en: string;
 }
 

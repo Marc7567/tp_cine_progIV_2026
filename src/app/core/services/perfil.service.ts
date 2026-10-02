@@ -5,11 +5,12 @@ import { CanjePerfil, Perfil, PeliculaVista } from '../models/perfil.interface';
 @Injectable({
     providedIn: 'root',
 })
+
 export class PerfilService {
     private supabase = inject(SupabaseService).client;
 
     async obtenerPerfil(): Promise<Perfil | null> {
-        const {data: { user }, error: authError} = await this.supabase.auth.getUser();
+        const { data: { user }, error: authError } = await this.supabase.auth.getUser();
 
         if (authError || !user) {
             return null;
@@ -17,7 +18,7 @@ export class PerfilService {
 
         const { data, error } = await this.supabase
             .from('usuarios')
-            .select(`id_usuario, id_rol, nombre, apellido, fecha_nacimiento, email, credito, puntos, primera_compra_realizada, creado_en`)
+            .select(`id_usuario, id_rol, nombre, apellido, fecha_nacimiento, email, credito, puntos, primera_compra, creado_en`)
             .eq('id_usuario', user.id)
             .single();
 
@@ -29,7 +30,7 @@ export class PerfilService {
     }
 
     async actualizarPerfil(nombre: string, apellido: string, fechaNacimiento: string): Promise<Perfil | null> {
-        const {data: { user }} = await this.supabase.auth.getUser();
+        const { data: { user } } = await this.supabase.auth.getUser();
 
         if (!user) {
             return null;
@@ -43,18 +44,17 @@ export class PerfilService {
                 fecha_nacimiento: fechaNacimiento
             })
             .eq('id_usuario', user.id)
-            .select(`id_usuario, id_rol, nombre, apellido, fecha_nacimiento, email, credito, puntos, primera_compra_realizada, creado_en`)
+            .select(`id_usuario, id_rol, nombre, apellido, fecha_nacimiento, email, credito,puntos, primera_compra, creado_en`)
             .single();
 
         if (error) {
             return null;
         }
-
         return data as Perfil;
     }
 
     async obtenerCanjes(): Promise<CanjePerfil[]> {
-        const {data: { user }} = await this.supabase.auth.getUser();
+        const { data: { user } } = await this.supabase.auth.getUser();
 
         if (!user) {
             return [];
@@ -62,8 +62,7 @@ export class PerfilService {
 
         const { data, error } = await this.supabase
             .from('canjes')
-            .select(`id_canje, puntos_utilizados, fecha, estado,
-                recompensas (id_recompensa, nombre, descripcion, tipo, valor, costo_puntos, activa)`)
+            .select(`id_canje, puntos_utilizados, fecha, estado, recompensas (id_recompensa, nombre, descripcion, tipo, valor, costo_puntos, activa)`)
             .eq('id_usuario', user.id)
             .order('fecha', { ascending: false });
 
@@ -81,19 +80,19 @@ export class PerfilService {
     }
 
     async obtenerPeliculasVistas(): Promise<PeliculaVista[]> {
-        const {data: { user }} = await this.supabase.auth.getUser();
+        const { data: { user } } = await this.supabase.auth.getUser();
 
         if (!user) {
             return [];
         }
 
-        const { data: compras, error: comprasError } = await this.supabase
-            .from('compras')
-            .select('id_compra')
-            .eq('id_usuario', user.id);
+        const { data: compras, error: comprasError } =
+            await this.supabase
+                .from('compras')
+                .select('id_compra')
+                .eq('id_usuario', user.id);
 
         if (comprasError) {
-            console.error('Error al obtener compras del usuario:', comprasError.message);
             return [];
         }
 
@@ -103,34 +102,31 @@ export class PerfilService {
             return [];
         }
 
-        const { data: entradasVistas, error: errorEntradas } = await this.supabase
-            .from('entradas')
-            .select(`id_entrada, fecha_uso,
-                funciones (id_funcion, fecha, hora_inicio,
-                peliculas (id_pelicula, titulo, imagen))`)
-            .eq('utilizada', true)
-            .in('id_compra', idsCompras);
+        const { data: entradasVistas, error: errorEntradas } =
+            await this.supabase
+                .from('entradas')
+                .select(`id_entrada, fecha_uso, funciones (id_funcion, fecha, hora_inicio, peliculas (id_pelicula, titulo, imagen))`)
+                .eq('utilizada', true)
+                .in('id_compra', idsCompras);
 
         if (errorEntradas) {
             return [];
         }
 
-        const { data: resenas, error: resenasError } = await this.supabase
-            .from('resenas')
-            .select(`id_pelicula, estrellas, comentario`)
-            .eq('id_usuario', user.id);
+        const { data: resenas, error: resenasError } =
+            await this.supabase
+                .from('resenas')
+                .select(`id_pelicula, estrellas, comentario`)
+                .eq('id_usuario', user.id);
 
         if (resenasError) {
-            console.error('Error al obtener calificaciones:', resenasError.message);
+            console.error(resenasError.message);
         }
 
         return (entradasVistas ?? []).map((entrada: any) => {
             const funcion = entrada.funciones;
             const pelicula = funcion?.peliculas;
-
-            const resena = (resenas ?? []).find(
-                (item: any) => item.id_pelicula === pelicula?.id_pelicula,
-            );
+            const resena = (resenas ?? []).find((item: any) => item.id_pelicula === pelicula?.id_pelicula);
 
             return {
                 id_entrada: entrada.id_entrada,
@@ -143,6 +139,41 @@ export class PerfilService {
                 comentario: resena?.comentario ?? null,
             };
         });
+    }
+
+    // Consulta los puntos del usuario autenticado.
+    async obtenerMisPuntos(): Promise<number | null> {
+        const { data, error } = await this.supabase.rpc('obtener_mis_puntos');
+
+        if (error) {
+            return null;
+        }
+        return Number(data ?? 0);
+    }
+
+    // Obtiene únicamente las recompensas activas.
+    async obtenerRecompensas(): Promise<any[]> {
+        const { data, error } = await this.supabase
+            .from('recompensas')
+            .select(`id_recompensa, nombre, descripcion, tipo, valor, costo_puntos, activa`)
+            .eq('activa', true)
+            .order('costo_puntos', {ascending: true});
+
+        if (error) {
+            return [];
+        }
+        return data ?? [];
+    }
+
+    async canjearRecompensa(idRecompensa: number): Promise<{data: any | null; errorMessage: string | null}> {
+        const { data, error } =
+            await this.supabase.rpc('canjear_recompensa', {p_id_recompensa: idRecompensa});
+
+        if (error) {
+            return {data: null, errorMessage: error.message};
+        }
+
+        return {data: data?.[0] ?? null, errorMessage: null};
     }
 
     private async obtenerIdCompraDeUsuario(idUsuario: string): Promise<number> {

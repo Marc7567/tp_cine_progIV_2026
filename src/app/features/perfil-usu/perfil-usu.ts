@@ -1,10 +1,9 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 import { CanjePerfil, Perfil, PeliculaVista } from '../../core/models/perfil.interface';
 import { PerfilService } from '../../core/services/perfil.service';
-import { DatePipe } from '@angular/common';
-
 
 @Component({
   imports: [ReactiveFormsModule, DatePipe],
@@ -22,13 +21,14 @@ export class PerfilUsu implements OnInit {
   perfil = signal<Perfil | null>(null);
   canjes = signal<CanjePerfil[]>([]);
   peliculasVistas = signal<PeliculaVista[]>([]);
-
+  recompensas = signal<any[]>([]);
+  
   cargando = signal(true);
   guardando = signal(false);
+  canjeando = signal<number | null>(null);
 
   mensaje = signal('');
   error = signal('');
-
   modoEdicion = signal(false);
 
   private validarFechaNacimiento: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -52,7 +52,6 @@ export class PerfilUsu implements OnInit {
     const mesTexto = partes[1] ?? '';
     const anioTexto = partes[2] ?? '';
 
-    // Validamos el día cuando está completo.
     if (diaTexto.length === 2) {
       const dia = Number(diaTexto);
 
@@ -61,7 +60,6 @@ export class PerfilUsu implements OnInit {
       }
     }
 
-    // Validamos el mes cuando está completo.
     if (mesTexto.length === 2) {
       const mes = Number(mesTexto);
 
@@ -70,7 +68,6 @@ export class PerfilUsu implements OnInit {
       }
     }
 
-    // Validamos la combinación día/mes.
     if (diaTexto.length === 2 && mesTexto.length === 2) {
       const dia = Number(diaTexto);
       const mes = Number(mesTexto);
@@ -81,16 +78,13 @@ export class PerfilUsu implements OnInit {
       }
     }
 
-    // Validamos el año cuando está completo.
     if (anioTexto.length === 4) {
-
       const anio = Number(anioTexto);
 
       if (anio < 1) {
         return { anioInvalido: true };
       }
 
-      // Febrero depende del año.
       if (diaTexto.length === 2 && mesTexto.length === 2 && Number(mesTexto) === 2) {
         const dia = Number(diaTexto);
         const esBisiesto = anio % 4 === 0 && (anio % 100 !== 0 || anio % 400 === 0);
@@ -101,9 +95,7 @@ export class PerfilUsu implements OnInit {
         }
       }
 
-      // La fecha no puede ser futura.
       if (diaTexto.length === 2 && mesTexto.length === 2) {
-
         const dia = Number(diaTexto);
         const mes = Number(mesTexto);
         const fecha = new Date(anio, mes - 1, dia);
@@ -114,7 +106,6 @@ export class PerfilUsu implements OnInit {
         }
       }
     }
-
     return null;
   };
 
@@ -128,17 +119,17 @@ export class PerfilUsu implements OnInit {
       Validators.minLength(2)
     ]],
     fechaNacimiento: ['', [
-      Validators.required,
+      Validators.required, 
       this.validarFechaNacimiento
-    ]]
+    ]],
   });
 
   formatearFecha(event: Event): void {
     const input = event.target as HTMLInputElement;
-    let numeros = input.value.replace(/\D/g, '');
 
-    // Máximo: dd/mm/yyyy
+    let numeros = input.value.replace(/\D/g, '');
     numeros = numeros.slice(0, 8);
+
     let resultado = '';
 
     if (numeros.length <= 2) {
@@ -150,7 +141,7 @@ export class PerfilUsu implements OnInit {
     }
 
     input.value = resultado;
-    this.perfilForm.get('fechaNacimiento')?.setValue(resultado, { emitEvent: true });
+    this.perfilForm.get('fechaNacimiento')?.setValue(resultado, {emitEvent: true});
   }
 
   async ngOnInit(): Promise<void> {
@@ -169,7 +160,18 @@ export class PerfilUsu implements OnInit {
         return;
       }
 
-      this.perfil.set(perfil);
+      /*
+       * Cargamos los datos personales y también
+       * los puntos mediante la función propia.
+       */
+      const puntos = await this.perfilService.obtenerMisPuntos();
+
+      const perfilConPuntos: Perfil = {
+        ...perfil,
+        puntos: puntos !== null ? puntos : perfil.puntos
+      };
+
+      this.perfil.set(perfilConPuntos);
 
       this.perfilForm.patchValue({
         nombre: perfil.nombre,
@@ -177,16 +179,18 @@ export class PerfilUsu implements OnInit {
         fechaNacimiento: this.convertirFechaParaMostrar(perfil.fecha_nacimiento)
       });
 
-      const [canjes, peliculas] = await Promise.all([
+      const [canjes, peliculas, recompensas] = await Promise.all([
         this.perfilService.obtenerCanjes(),
-        this.perfilService.obtenerPeliculasVistas()
+        this.perfilService.obtenerPeliculasVistas(),
+        this.perfilService.obtenerRecompensas()
       ]);
 
       this.canjes.set(canjes);
       this.peliculasVistas.set(peliculas);
+      this.recompensas.set(recompensas);
+
     } catch (error) {
       this.error.set('No se pudo cargar el perfil.');
-
     } finally {
       this.cargando.set(false);
     }
@@ -199,7 +203,6 @@ export class PerfilUsu implements OnInit {
 
   convertirFechaParaBD(fecha: string): string {
     const [dia, mes, anio] = fecha.split('/');
-
     return `${anio}-${mes}-${dia}`;
   }
 
@@ -253,7 +256,10 @@ export class PerfilUsu implements OnInit {
         return;
       }
 
-      this.perfil.set(perfilActualizado);
+      // Conservamos los puntos actuales.
+      const puntosActuales = this.perfil()?.puntos ?? perfilActualizado.puntos;
+
+      this.perfil.set({...perfilActualizado, puntos: puntosActuales});
 
       this.perfilForm.patchValue({
         nombre: perfilActualizado.nombre,
@@ -262,13 +268,55 @@ export class PerfilUsu implements OnInit {
       });
 
       this.modoEdicion.set(false);
-      this.mensaje.set('Los datos se actualizaron correctamente.');
 
+      this.mensaje.set('Los datos se actualizaron correctamente.');
     } catch (error) {
       this.error.set('No se pudieron guardar los cambios.');
 
     } finally {
       this.guardando.set(false);
+    }
+  }
+
+  async canjearRecompensa(idRecompensa: number): Promise<void> {
+    if (this.canjeando() !== null) {
+      return;
+    }
+
+    this.canjeando.set(idRecompensa);
+    this.mensaje.set('');
+    this.error.set('');
+
+    try {
+      const resultado = await this.perfilService.canjearRecompensa(idRecompensa);
+
+      if (resultado.errorMessage || !resultado.data) {
+        this.error.set(resultado.errorMessage ?? 'No se pudo realizar el canje.');
+        return;
+      }
+
+      const perfilActual = this.perfil();
+
+      if (perfilActual) {
+        this.perfil.set({
+          ...perfilActual,
+          puntos: Number(resultado.data.puntos_restantes),
+        });
+      }
+
+      /*
+       * Actualizamos el historial para que
+       * aparezca inmediatamente el nuevo canje.
+       */
+      const canjes = await this.perfilService.obtenerCanjes();
+
+      this.canjes.set(canjes);
+      this.mensaje.set('El canje se realizó correctamente.');
+
+    } catch (error) {
+      this.error.set('No se pudo realizar el canje.');
+    } finally {
+      this.canjeando.set(null);
     }
   }
 
