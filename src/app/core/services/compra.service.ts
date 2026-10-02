@@ -4,7 +4,7 @@ import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 
 export class CompraService {
