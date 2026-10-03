@@ -186,4 +186,46 @@ export class PerfilService {
 
         return data?.id_compra ?? 0;
     }
+
+    async obtenerMisCompras(): Promise<any[]> {
+        const { data: { user }, error: authError } = await this.supabase.auth.getUser();
+
+        if (authError || !user) {
+            return [];
+        }
+
+        const { data, error } = await this.supabase
+            .from('compras')
+            .select(`id_compra, fecha_compra, subtotal, descuento, credito_utilizado, total, medio_pago, estado, codigo_qr,
+                entradas (id_entrada, id_funcion, id_butaca, precio, codigo_qr, utilizada, fecha_uso,
+                butacas (id_butaca, fila, columna),
+                funciones (id_funcion, id_pelicula, fecha, hora_inicio, hora_fin, modalidad, idioma, precio_base,
+                peliculas (id_pelicula, titulo, imagen)))
+            `)
+            .eq('id_usuario', user.id)
+            .order('fecha_compra', { ascending: false });
+
+        if (error) {
+            return [];
+        }
+
+        return data ?? [];
+    }
+
+    async cancelarCompra(idCompra: number): Promise<{exito: boolean; mensaje: string; creditoGenerado: number; creditoTotal: number}> {
+        // llamamos a la función 'cancelar_compra' en Supabase, pasando el id de la compra a cancelar
+        const { data, error } = await this.supabase.rpc('cancelar_compra', {p_id_compra: idCompra});
+
+        if (error) {
+            return {exito: false, mensaje: error.message, creditoGenerado: 0, creditoTotal: 0};
+        }
+
+        if (!data || data.length === 0) {
+            // Si no hay datos devueltos, significa que la compra no pudo ser cancelada
+            return {exito: false, mensaje: 'No se pudo cancelar la compra.', creditoGenerado: 0, creditoTotal: 0};
+        }
+        
+        // Si la compra fue cancelada correctamente, devolvemos un mensaje de éxito y los créditos generados
+        return {exito: true, mensaje: 'Compra cancelada correctamente.', creditoGenerado: Number(data[0].credito_generado), creditoTotal: Number(data[0].credito_total)};
+        }
 }

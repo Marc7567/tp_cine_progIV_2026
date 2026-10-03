@@ -31,6 +31,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/perfil-usu/perfil-usu').then(c => c.PerfilUsu)
   },
   {
+    path: 'mis-compras',
+    loadComponent: () => import('./features/mis-compras/mis-compras').then(c => c.MisCompras)
+  },
+  {
     path: 'resenas/:id',
     loadComponent: () => import('./features/resenas/resenas').then(c => c.Resenas)
   },

@@ -10,6 +10,7 @@
     <a routerLink="/proximamente" routerLinkActive="active">Proximamente</a>
 
     @if (authService.currentUser()) {
+        <a routerLink="/mis-compras" routerLinkActive="active">Mis compras</a>
       <a routerLink="/perfil" routerLinkActive="active">Mi perfil</a>
       <a href="#" (click)="logout(); $event.preventDefault()">🚪 Cerrar sesión</a>
     } @else {

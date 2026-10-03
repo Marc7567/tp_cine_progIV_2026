@@ -1,0 +1,85 @@
+<section class="mis-compras-page">
+  <div class="mis-compras-header">
+    <h1>Mis compras</h1>
+    <p>Consultá tus entradas y compras realizadas en la pagina.</p>
+  </div>
+
+  @if (mensaje()) {
+    <div class="mensaje-exito">
+      {{ mensaje() }}
+    </div>
+  }
+
+  @if (error()) {
+    <div class="mensaje-error">
+      {{ error() }}
+    </div>
+  }
+
+  @if (cargando()) {
+    <div class="estado-carga">
+      <p>Cargando tus compras...</p>
+    </div>
+
+  } @else if (compras().length === 0) {
+    <div class="sin-compras">
+      <p>No realizaste ninguna compra.</p>
+    </div>
+
+  } @else {
+    <div class="compras-lista">
+      @for (compra of compras(); track compra.id_compra) {
+        <article class="compra-card">
+          <div class="compra-titulo">
+            <div>
+              <h2>{{ compra.entradas?.[0]?.funciones?.peliculas?.titulo ?? 'Película' }}</h2>
+              <p> Compra #{{ compra.id_compra }} </p>
+            </div>
+
+            <span
+              class="estado-compra"
+              [class.confirmada]="compra.estado === 'confirmada'"
+              [class.cancelada]="compra.estado === 'cancelada'"
+            >
+              {{ compra.estado }}
+            </span>
+          </div>
+
+          <div class="compra-contenido">
+            @if (compra.entradas?.[0]?.funciones?.peliculas?.imagen) {
+              <img
+                [src]="compra.entradas[0].funciones.peliculas.imagen"
+                [alt]="compra.entradas[0].funciones.peliculas.titulo"
+              />
+            }
+
+            <div class="compra-datos">
+              <p><strong>Fecha de función: </strong>{{ compra.entradas?.[0]?.funciones?.fecha }}</p>
+              <p><strong>Hora: </strong>{{ compra.entradas?.[0]?.funciones?.hora_inicio }}</p>
+              <p><strong>Butaca: </strong>{{ compra.entradas?.[0]?.butacas?.fila}}{{ compra.entradas?.[0]?.butacas?.columna }}</p>
+              <p><strong>Total: </strong>${{ compra.total }}</p>
+              <p><strong>Medio de pago: </strong>{{ compra.medio_pago }}</p>
+
+              @if (compra.estado === 'confirmada') {
+                <div class="acciones-compra">
+                  <button
+                    type="button"
+                    class="btn-cancelar"
+                    [disabled]="cancelando() === compra.id_compra"
+                    (click)="cancelarCompra(compra.id_compra)"
+                  >
+                    @if (cancelando() === compra.id_compra) {
+                      Cancelando...
+                    } @else {
+                      Cancelar compra
+                    }
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
