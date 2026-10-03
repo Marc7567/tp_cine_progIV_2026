@@ -151,8 +151,12 @@ Decisiones Tecnicas:
 
 2) Las reseñas y calificaciones no se limitarán a usuarios registrados, ya que en los mails se establece que 'cualquier persona' podrá calificar una película y dejar un comentario.
 
-4) La compra de entradas durante la preventa estará disponible para los usuarios en general y no será exclusiva de usuarios registrados, ya que no se establece que sea exclusivo para usuarios registrados.
+3) La compra de entradas durante la preventa estará disponible para los usuarios en general y no será exclusiva de usuarios registrados, ya que no se establece que sea exclusivo para usuarios registrados.
 
-5) No se establece que el usuario deba consultar obligatoriamente el detalle completo de una película antes de comprar entradas. El requerimiento únicamente establece que las reseñas y la puntuación promedio deberán poder consultarse antes de sacar las entradas.
+4) No se establece que el usuario deba consultar obligatoriamente el detalle completo de una película antes de comprar entradas. El requerimiento únicamente establece que las reseñas y la puntuación promedio deberán poder consultarse antes de sacar las entradas.
+
+5) El usuario podra ingresar su fecha de nacimiento en un formato distinto sin depender del calendario.
 
 6) El usuario registrado podra editar sus datos perosnales (nombre, Apellido, fecha de nacimiento) menos su email.
+
+7) El usuario podra cancelar sus compras ingresando a la seccion "Mis compras" donde se mostrara un historial de todas las compras que realizo.
