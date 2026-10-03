@@ -8,7 +8,6 @@ import { PerfilService } from '../../core/services/perfil.service';
   styleUrl: './mis-compras.css',
   templateUrl: './mis-compras.html',
 })
-
 export class MisCompras implements OnInit {
   private perfilService = inject(PerfilService);
 
