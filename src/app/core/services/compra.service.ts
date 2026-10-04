@@ -11,8 +11,10 @@ export class CompraService {
     private supabase = inject(SupabaseService).client;
     private authService = inject(AuthService);
     private compraSignal = signal<CompraActual | null>(null);
+    private creditoUtilizadoSignal = signal(0);
 
     compra = this.compraSignal.asReadonly();
+    creditoUtilizado = this.creditoUtilizadoSignal.asReadonly();
 
     guardarCompra(datos: {
         funcion: any;
@@ -29,31 +31,59 @@ export class CompraService {
         totalCandyBar: number;
         totalCompra: number;
     }): void {
-    const codigoCompra = `QR-${crypto.randomUUID()}`;
+        const codigoCompra = `QR-${crypto.randomUUID()}`;
 
-    this.compraSignal.set({
-        funcion: datos.funcion,
-        pelicula: datos.pelicula,
-        butaca: datos.butaca,
-        comprador: {
-            nombre: datos.comprador.nombre,
-            apellido: datos.comprador.apellido,
-            dni: datos.comprador.dni,
-            email: datos.comprador.email
-        },
-        productos: datos.productos,
-        combos: datos.combos,
-        totalCandyBar: datos.totalCandyBar,
-        totalCompra: datos.totalCompra,
-        codigoCompra: codigoCompra,
-        pagoRealizado: false
+        this.compraSignal.set({
+            funcion: datos.funcion,
+            pelicula: datos.pelicula,
+            butaca: datos.butaca,
+            comprador: {
+                nombre: datos.comprador.nombre,
+                apellido: datos.comprador.apellido,
+                dni: datos.comprador.dni,
+                email: datos.comprador.email
+            },
+            productos: datos.productos,
+            combos: datos.combos,
+            totalCandyBar: datos.totalCandyBar,
+            totalCompra: datos.totalCompra,
+            codigoCompra: codigoCompra,
+            pagoRealizado: false
         });
+
+        this.creditoUtilizadoSignal.set(0);
+    }
+    
+    async obtenerCreditoDisponible(): Promise<number> {
+        const { data: { user }, error: authError } = await this.supabase.auth.getUser();
+
+        if (authError || !user) {
+            return 0;
+        }
+
+        const { data, error } = await this.supabase
+            .from('usuarios')
+            .select('credito, id_rol')
+            .eq('id_usuario', user.id)
+            .single();
+
+        if (error || !data) {
+            return 0;
+        }
+
+        if (data.id_rol !== 3) {
+            return 0;
+        }
+
+        return Number(data.credito ?? 0);
     }
 
-    async registrarCompraEnSupabase(): Promise<boolean> {
+    // Guardamos la compra la base de datos
+    async registrarCompra(creditoUtilizado: number = 0): Promise<boolean> {
         const compraActual = this.compraSignal();
 
         if (!compraActual) {
+            console.log('ERROR: no existe compraActual');
             return false;
         }
 
@@ -66,19 +96,37 @@ export class CompraService {
             id_combo: item.combo.id_combo,
             cantidad: item.cantidad
         }));
-        
-        // Obtenemos el usuario autenticado desde Supabase
-        const { data: { user } } = await this.supabase.auth.getUser();
 
-        const { data, error } = await this.supabase.rpc('registrar_compra', {
-            p_id_usuario: user?.id ?? null,
-            p_id_funcion: compraActual.funcion.id_funcion,
-            p_id_butaca: compraActual.butaca.id_butaca,
-            p_medio_pago: 'tarjeta',
-            p_codigo_qr: compraActual.codigoCompra,
-            p_productos: productos,
-            p_combos: combos
-        });
+        const { data: { user }, error: errorUsuario } = await this.supabase.auth.getUser();
+
+        if (errorUsuario) {
+            return false;
+        }
+
+        const credito = Number(creditoUtilizado);
+
+        let medioPago = 'tarjeta';
+
+        if (credito > 0) {
+            if (credito >= Number(compraActual.totalCompra)) {
+                medioPago = 'credito';
+            } else {
+                medioPago = 'tarjeta + credito';
+            }
+        }
+
+        const { data, error } = await this.supabase.rpc('registrar_compra',
+            {
+                p_id_usuario: user?.id ?? null,
+                p_id_funcion: compraActual.funcion.id_funcion,
+                p_id_butaca: compraActual.butaca.id_butaca,
+                p_medio_pago: medioPago,
+                p_codigo_qr: compraActual.codigoCompra,
+                p_productos: productos,
+                p_combos: combos,
+                p_credito_utilizado: credito
+            }
+        );
 
         if (error) {
             return false;
@@ -88,10 +136,12 @@ export class CompraService {
             return false;
         }
 
+        this.creditoUtilizadoSignal.set(Number(data[0].credito_utilizado ?? 0));
+
         this.compraSignal.set({
             ...compraActual,
             totalCompra: Number(data[0].total),
-            pagoRealizado: true,
+            pagoRealizado: true
         });
 
         return true;
@@ -113,11 +163,13 @@ export class CompraService {
         if (error) {
             return false;
         }
-            // Verificamos si el usuario es un cliente registrado (id_rol === 3) y si no ha realizado ninguna compra antes (primera_compra === false)
+            // Verificamos si el usuario es un clienteregistrado y si no ha realizado ninguna compra antes
             return data?.id_rol === 3 && data?.primera_compra === false;
         }
 
     vaciarCompra(): void {
         this.compraSignal.set(null);
+
+        this.creditoUtilizadoSignal.set(0);
     }
 }

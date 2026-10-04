@@ -14,46 +14,127 @@
     } @else {
       @if (metodoSeleccionado() === 'tarjeta') {
         <div class="panel">
-          <div class="datos-tarjeta">
-            <h2>Pago con tarjeta</h2>
+          <h2>Pago con tarjeta</h2>
 
-            <form [formGroup]="formularioTarjeta">
-              <label for="titular"> Nombre del titular </label>
-              <input
-                id="titular"
-                type="text"
-                formControlName="titular"
-                placeholder="Ingrese el nombre del titular"
-              />
+          @if (totaFinal() > 0) {
+            <div class="datos-tarjeta">
+              <h2>Datos de la tarjeta</h2>
 
-              @if (formularioTarjeta.controls.titular.touched && formularioTarjeta.controls.titular.invalid){
-                <p>Minimo 3 caracteres</p>.
-              }
-              
-              <label for="numero"> Numero de tarjeta </label>
-              <input
-                id="numero"
-                type="text"
-                maxlength="10"
-                formControlName="numero"
-                placeholder="Ingrese 10 dígitos"
-              />
+              <form [formGroup]="formularioTarjeta">
+                <label for="titular">Nombre del titular</label>
+                <input
+                  id="titular"
+                  type="text"
+                  formControlName="titular"
+                  placeholder="Ingrese el nombre del titular"
+                />
 
-              @if (formularioTarjeta.controls.numero.touched && formularioTarjeta.controls.numero.invalid) {
-                <p>Debe ingresar los 10 digitos de la tarjeta.</p>
-              }
-            </form>
-          </div>
+                @if (formularioTarjeta.controls.titular.touched && formularioTarjeta.controls.titular.invalid) {
+                  <p>Minimo 3 caracteres</p>
+                }
 
-          <p class="total">Total a pagar:<strong>${{ total() }}</strong></p>
-          <button type="button" class="boton" (click)="pagar()">Confirmar pago</button>
+                <label for="numero">Numero de tarjeta</label>
+                <input
+                  id="numero"
+                  type="text"
+                  maxlength="10"
+                  formControlName="numero"
+                  placeholder="Ingrese 10 dígitos"
+                />
+
+                @if (formularioTarjeta.controls.numero.touched && formularioTarjeta.controls.numero.invalid) {
+                  <p>Debe ingresar los 10 digitos de la tarjeta.</p>
+                }
+              </form>
+
+              <p class="total">Total a pagar: <strong>${{ totaFinal() }}</strong></p>
+            </div>
+          }
         </div>
+
+        <!-- BLOQUE DE CRÉDITO -->
+        <div class="panel credito">
+          @if (!usarCredito()) {
+            <h2>¿Desea utilizar crédito para su compra?</h2>
+
+            <button
+              type="button"
+              class="boton"
+              (click)="seleccionarUsoCredito(true)"
+            >
+              Usar crédito
+            </button>
+          }
+
+          @if (usarCredito() && ingresandoCredito()) {
+            <h2>Ingrese el credito</h2>
+
+            <p>Credito disponible: <strong>${{ creditoDisponible() - creditoUsado() }}</strong></p>
+            <p>Credito utilizado: <strong>${{ creditoUsado() }}</strong></p>
+
+            <label for="montoCredito">Credito:</label>
+
+            <input
+              id="montoCredito"
+              type="number"
+              min="0"
+              [value]="montoCredito()"
+              (input)="cambiarMontoCredito($event)"
+              placeholder="Ingrese el monto"
+            />
+
+            @if (montoCredito() < 0) {
+              <p>El monto no puede ser negativo.</p>
+            }
+            @if (montoCredito() > 0 && montoCredito() < 100) {
+              <p>Debe usar al menos 100 creditos</p>
+            }
+            @if (creditoUsado() + montoCredito() > creditoDisponible()) {
+              <p>El credito no puede exceder lo disponible</p>
+            }
+            @if (creditoUsado() + montoCredito() > total()) {
+              <p>El crédito usado no puede superar el total de la compra</p>
+            }
+
+            <button
+              type="button"
+              class="boton"
+              (click)="usarTodoElCredito()"
+            >
+              Usar todo el credito
+            </button>
+
+            <button
+              type="button"
+              class="boton"
+              (click)="aplicarCredito()"
+            >
+              Aplicar crédito
+            </button>
+          }
+
+          @if (usarCredito() && !ingresandoCredito()) {
+            <h3>Desea usar más crédito?</h3>
+            <p>Crédito utilizado: <strong>${{ creditoUsado() }}</strong></p>
+            <button
+              type="button"
+              class="boton"
+              (click)="usarMasCredito()"
+            >
+              Usar más crédito
+            </button>
+          }
+        </div>
+
+        <button type="button" class="boton" (click)="pagar()">
+          Confirmar pago
+        </button>
       }
     }
   } @else {
     <div class="panel">
       <h2>Pago realizado</h2>
-      <p>Total: <strong>${{ total() }}</strong></p>
+      <p>Total: <strong>${{ totaFinal() }}</strong></p>
       <button type="button" class="boton" (click)="generarPDF()">Finalizar compra</button>
     </div>
   }

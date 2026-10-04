@@ -10,6 +10,7 @@ import { CompraService } from '../../core/services/compra.service';
   templateUrl: './generar-pdf.html',
   styleUrl: './generar-pdf.css',
 })
+
 export class GenerarPdf implements OnInit {
   private compraService = inject(CompraService);
   private router = inject(Router);
@@ -23,6 +24,7 @@ export class GenerarPdf implements OnInit {
 
   private async generarPDF(): Promise<void> {
     const compraActual = this.compra();
+    const creditoUtilizado = this.compraService.creditoUtilizado();
 
     if (!compraActual) {
       return;
@@ -50,7 +52,7 @@ export class GenerarPdf implements OnInit {
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(10);
 
-      pdf.text(`Codigo: ${compraActual.codigoCompra}`, 30, y);
+      pdf.text(`Codigo de compra: ${compraActual.codigoCompra}`, 30, y);
 
       y += 10;
 
@@ -148,11 +150,21 @@ export class GenerarPdf implements OnInit {
 
       pdf.setFont('helvetica', 'bold');
       pdf.setFontSize(14);
+      
+      if (creditoUtilizado > 0) {
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(10);
+
+        pdf.text('Crédito utilizado:', 30, y);
+        pdf.text(`$${creditoUtilizado}`, 170, y, { align: 'right' });
+
+        y += 8;
+      }
 
       pdf.text('TOTAL:', 30, y);
       pdf.text(`$${compraActual.totalCompra}`, 170, y, { align: 'right' });
 
-      y += 15;
+      y += 8;
 
       pdf.setFontSize(10);
       pdf.text('Codigo QR de la compra', 105, y, { align: 'center' });

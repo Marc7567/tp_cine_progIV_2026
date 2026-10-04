@@ -54,3 +54,11 @@
 .boton:hover {
     transform: scale(1.03);
 }
+
+.credito {
+    margin-top: 25px;
+}
+
+.credito h2 {
+    margin-top: 0;
+}
