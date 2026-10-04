@@ -142,7 +142,7 @@ Requerimientos funcionales:
 
 58) El administrador podrá consultar los registros de actividad realizados por administradores y empleados.
 
---
+```
 Arquitectura:
 src/
 └── app/
@@ -175,7 +175,7 @@ src/
     ├── app.config.ts
     └── app.routes.ts
     
---
+```
 Decisiones Tecnicas:
 1) No se solicitarán ni mostrarán en el perfil del usuario registrado el tipo de sangre, color de ojos ni la cantidad de días de vacaciones anuales, por considerarse datos innecesarios para el registro y funcionamiento de la aplicación.
 
