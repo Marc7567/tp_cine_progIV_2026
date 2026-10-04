@@ -142,37 +142,39 @@ Requerimientos funcionales:
 
 58) El administrador podrá consultar los registros de actividad realizados por administradores y empleados.
 
----------------------------------
+--------------------------------
 Arquitectura:
-src/app/
-├── core/
-|   ├-─ guards/           # Proteger rutas según la autenticación del usuario (segun su rol)
-│   ├── models/           # Interfaces y estructuras de datos 
-│   └── services/         # Lógica y comunicación con Supabase
-│  
-├── features/
-│   ├── auth/
-│   │   ├── login/        # Formulario de inicio de sesión
-│   │   └── register/     # Formulario de registro 
-│   │
-│   ├── home/             # Página principal y listado de películas
-│   ├── pelicula-detail/  # Detalles de una película
-│   ├── compra-entrada/   # Selección de función y butaca
-│   ├── candy-bar/        # Selección de productos y combos
-│   ├── form-compra/      # Formulario con los datos del comprador (nombre, apellido, dni y email)
-│   ├── metodo-pago/      # Metodos de pago y uso de crédito para comprar
-│   ├── generar-pdf/      # Generación del comprobante con los datos de compra y código QR
-│   ├── mis-compras/      # Historial de compras del usuario
-│   ├── perfil-usu/       # Consulta y gestión del perfil del usuario
-│   ├── proximamente/     # Películas próximas a estrenarse 
-|   ├── resenas/          # Publicación de reseñas
-│   └── resumen-compra/   # Muestra ub resumen con los datos de la compra (datos comprador, pelicula, productos, combos, total)
-│
-├── app.ts
-├── app.html
-├── app.css 
-├── app.config.ts 
-└── app.routes.ts         
+src/
+└── app/
+    ├── core/
+    │   ├── guards/             # Proteger rutas según la autenticación del usuario (segun su rol)
+    │   ├── models/             # Interfaces y estructuras de datos
+    │   └── services/           # Lógica y comunicación con Supabase
+    │
+    ├── features/
+    │   ├── auth/
+    │   │   ├── login/          # Formulario de inicio de sesión
+    │   │   └── register/       # Formulario de registro
+    │   │
+    │   ├── home/               # Página principal y listado de películas
+    │   ├── pelicula-detail/    # Detalles de una película
+    │   ├── compra-entrada/     # Selección de función y butaca
+    │   ├── candy-bar/          # Selección de productos y combos
+    │   ├── form-compra/        # Formulario con los datos del comprador (nombre, apellido, dni y email)
+    │   ├── metodo-pago/        # Metodos de pago y uso de crédito para comprar
+    │   ├── generar-pdf/        # Generación del comprobante con los datos de compra y código QR
+    │   ├── mis-compras/        # Historial de compras del usuario
+    │   ├── perfil-usu/         # Consulta y gestión del perfil del usuario
+    │   ├── proximamente/       # Películas próximas a estrenarse
+    │   ├── resenas/            # Publicación de reseñas
+    │   └── resumen-compra/     # Muestra un resumen con los datos de la compra (datos comprador, pelicula, productos, combos, total)
+    │
+    ├── app.ts
+    ├── app.html
+    ├── app.css
+    ├── app.config.ts
+    └── app.routes.ts
+    
 ---------------------------------
 Decisiones Tecnicas:
 1) No se solicitarán ni mostrarán en el perfil del usuario registrado el tipo de sangre, color de ojos ni la cantidad de días de vacaciones anuales, por considerarse datos innecesarios para el registro y funcionamiento de la aplicación.
