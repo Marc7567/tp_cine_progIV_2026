@@ -149,7 +149,7 @@ src/app/
 |   ├-─ guards/           # Proteger rutas según la autenticación del usuario (segun su rol)
 │   ├── models/           # Interfaces y estructuras de datos 
 │   └── services/         # Lógica y comunicación con Supabase
-│   
+│  
 ├── features/
 │   ├── auth/
 │   │   ├── login/        # Formulario de inicio de sesión
