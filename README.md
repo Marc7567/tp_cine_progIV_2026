@@ -142,9 +142,8 @@ Desde el lado administrativo, se dispondrá de herramientas para gestionar pelí
 
 58) El administrador podrá consultar los registros de actividad realizados por administradores y empleados.
 
----------------------------------------------------------------------
-### Arquitecruta
-```
+--------------------------------
+Arquitectura:
 src/
 └── app/
     ├── core/
