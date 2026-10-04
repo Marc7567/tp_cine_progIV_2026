@@ -144,6 +144,35 @@ Requerimientos funcionales:
 
 ---------------------------------
 Arquitectura:
+src/app/
+├── core/
+|   ├-─ guards/           # Proteger rutas según la autenticación del usuario (segun su rol)
+│   ├── models/           # Interfaces y estructuras de datos 
+│   └── services/         # Lógica y comunicación con Supabase
+│   
+├── features/
+│   ├── auth/
+│   │   ├── login/        # Formulario de inicio de sesión
+│   │   └── register/     # Formulario de registro 
+│   │
+│   ├── home/             # Página principal y listado de películas
+│   ├── pelicula-detail/  # Detalles de una película
+│   ├── compra-entrada/   # Selección de función y butaca
+│   ├── candy-bar/        # Selección de productos y combos
+│   ├── form-compra/      # Formulario con los datos del comprador (nombre, apellido, dni y email)
+│   ├── metodo-pago/      # Metodos de pago y uso de crédito para comprar
+│   ├── generar-pdf/      # Generación del comprobante con los datos de compra y código QR
+│   ├── mis-compras/      # Historial de compras del usuario
+│   ├── perfil-usu/       # Consulta y gestión del perfil del usuario
+│   ├── proximamente/     # Películas próximas a estrenarse 
+|   ├── resenas/          # Publicación de reseñas
+│   └── resumen-compra/   # Muestra ub resumen con los datos de la compra (datos comprador, pelicula, productos, combos, total)
+│
+├── app.ts                
+├── app.html              
+├── app.css               
+├── app.config.ts         
+└── app.routes.ts         
 
 ---------------------------------
 Decisiones Tecnicas:
@@ -153,10 +182,12 @@ Decisiones Tecnicas:
 
 3) La compra de entradas durante la preventa estará disponible para los usuarios en general y no será exclusiva de usuarios registrados, ya que no se establece que sea exclusivo para usuarios registrados.
 
-4) No se establece que el usuario deba consultar obligatoriamente el detalle completo de una película antes de comprar entradas. El requerimiento únicamente establece que las reseñas y la puntuación promedio deberán poder consultarse antes de sacar las entradas.
+4) El usuario podra consultar las resenas de las peliculas antes de realizar una compra, ademas podra agregar comentarios.
 
 5) El usuario podra ingresar su fecha de nacimiento en un formato distinto sin depender del calendario.
 
 6) El usuario registrado podra editar sus datos perosnales (nombre, Apellido, fecha de nacimiento) menos su email.
 
 7) El usuario podra cancelar sus compras ingresando a la seccion "Mis compras" donde se mostrara un historial de todas las compras que realizo.
+
+8) El usuario registrado podra utilizar sus creditos con otros medios de pagos o pagar la compra solo con creditos.
