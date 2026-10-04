@@ -142,7 +142,7 @@ Desde el lado administrativo, se dispondrá de herramientas para gestionar pelí
 
 58) El administrador podrá consultar los registros de actividad realizados por administradores y empleados.
 
----------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------
 ### Arquitecruta
 ```
 src/
@@ -177,7 +177,8 @@ src/
     └── app.routes.ts
     
 ```
-----------------------------------------------------------------------
+
+---------------------------------------------------------------------
 ### Decisiones Tecnicas:
 1) No se solicitarán ni mostrarán en el perfil del usuario registrado el tipo de sangre, color de ojos ni la cantidad de días de vacaciones anuales, por considerarse datos innecesarios para el registro y funcionamiento de la aplicación.
 
@@ -194,4 +195,3 @@ src/
 7) El usuario podra cancelar sus compras ingresando a la seccion "Mis compras" donde se mostrara un historial de todas las compras que realizo.
 
 8) El usuario registrado podra utilizar sus creditos con otros medios de pagos o pagar la compra solo con creditos.
-
