@@ -194,3 +194,4 @@ src/
 7) El usuario podra cancelar sus compras ingresando a la seccion "Mis compras" donde se mostrara un historial de todas las compras que realizo.
 
 8) El usuario registrado podra utilizar sus creditos con otros medios de pagos o pagar la compra solo con creditos.
+
