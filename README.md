@@ -1,4 +1,4 @@
-Titulo del proyecto: Sistema de gestion y venta de entradas de cine.
+### Titulo del proyecto: Sistema de gestion y venta de entradas de cine.
 
 Descripcion del proyecto: El proyecto consiste en desarrollar una aplicacion web para un establecimiento cinematografico, cuyo objetiivo es realizar consultas de peliculas, funciones, selecciones y compra de entradas, adquision de productos de la dulceria y gestionar los servicios ofrecidos por el cine.
 
@@ -11,8 +11,8 @@ El sistema tambien tendra en cuenta usuarios registrados, anonimos, empleados y 
 Desde el lado administrativo, se dispondrá de herramientas para gestionar películas, funciones, salas, butacas, productos, promociones y recompensas, además de reportes, estadísticas y registros de actividad.
 
 
-Requerimientos funcionales:
-1: Funciones generales de la pagina
+### Requerimientos funcionales:
+### 1: Funciones generales de la pagina
 
 1) El sistema deberá asignar automáticamente una sala disponible al crear una función, impidiendo que dos funciones ocupen la misma sala y horario.
 
@@ -37,7 +37,7 @@ Requerimientos funcionales:
 11) El sistema deberá registrar las actividades importantes realizadas por administradores y empleados, indicando quién realizó la acción, qué acción realizó y la fecha y hora.
 
 --------------
-2: Funciones generales para usuarios (anonimos o registrados)
+### 2: Funciones generales para usuarios (anonimos o registrados)
 
 12) El usuario podrá consultar las películas disponibles en la cartelera, incluyendo su nombre, imagen, sinopsis, duración, géneros y clasificación de edad.
 
@@ -72,7 +72,7 @@ Requerimientos funcionales:
 27) El usuario podrá adquirir entradas durante el período de preventa de una película cuando este se encuentre habilitado.
 
 -----------------------------------------------------------------------
-1.2: funciones para Usuarios registrados
+### 1.2: funciones para Usuarios registrados
 
 28) El usuario podrá registrarse e iniciar sesión en el sistema.
 
@@ -93,7 +93,7 @@ Requerimientos funcionales:
 36) El usuario registrado puede usar su crédito con otros métodos de pago.
 
 -----------------------------------------------------------------------
-3: Funciones para Empleados
+### 3: Funciones para Empleados
 
 37) El empleado podrá iniciar sesión con una cuenta con permisos de empleado.
 
@@ -142,8 +142,9 @@ Requerimientos funcionales:
 
 58) El administrador podrá consultar los registros de actividad realizados por administradores y empleados.
 
+---------------------------------------------------------------------------------------------------
+### Arquitecruta
 ```
-Arquitectura:
 src/
 └── app/
     ├── core/
@@ -176,7 +177,8 @@ src/
     └── app.routes.ts
     
 ```
-Decisiones Tecnicas:
+----------------------------------------------------------------------
+### Decisiones Tecnicas:
 1) No se solicitarán ni mostrarán en el perfil del usuario registrado el tipo de sangre, color de ojos ni la cantidad de días de vacaciones anuales, por considerarse datos innecesarios para el registro y funcionamiento de la aplicación.
 
 2) Las reseñas y calificaciones no se limitarán a usuarios registrados, ya que en los mails se establece que 'cualquier persona' podrá calificar una película y dejar un comentario.
