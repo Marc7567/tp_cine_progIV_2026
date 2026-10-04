@@ -168,12 +168,11 @@ src/app/
 |   ├── resenas/          # Publicación de reseñas
 │   └── resumen-compra/   # Muestra ub resumen con los datos de la compra (datos comprador, pelicula, productos, combos, total)
 │
-├── app.ts                
-├── app.html              
-├── app.css               
-├── app.config.ts         
+├── app.ts
+├── app.html
+├── app.css 
+├── app.config.ts 
 └── app.routes.ts         
-
 ---------------------------------
 Decisiones Tecnicas:
 1) No se solicitarán ni mostrarán en el perfil del usuario registrado el tipo de sangre, color de ojos ni la cantidad de días de vacaciones anuales, por considerarse datos innecesarios para el registro y funcionamiento de la aplicación.
