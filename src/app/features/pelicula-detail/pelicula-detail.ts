@@ -7,7 +7,6 @@ import { PreventaService } from '../../core/services/preventa.service';
 import { AlertaVentaService } from '../../core/services/alerta-venta.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { Resena } from '../../core/models/resenas.interface';
-import { Preventa } from '../../core/models/preventa.interface';
 
 import { EdadMinimaPipe } from '../../shared/pipes/edad-minima.pipe';
 import { DuracionPipe } from '../../shared/pipes/duracion.pipe';
@@ -46,8 +45,6 @@ export class PeliculaDetail {
   promedio = signal(0);
   cantidadResenas = signal(0);
 
-  preventa = signal<Preventa | null>(null);
-
   mensajeAlerta = signal('');
   activandoAlerta = signal(false);
 
@@ -67,10 +64,7 @@ export class PeliculaDetail {
       return 'no-disponible';
     }
 
-    return this.preventaService.determinarEstado(
-      peliculaActual,
-      this.preventa(),
-    );
+    return this.preventaService.determinarEstado(peliculaActual);
   });
 
   mostrarBotonAlerta = computed(() => {
@@ -96,7 +90,6 @@ export class PeliculaDetail {
 
       this.funcionesService.cargarFuncionesPorPelicula(idPelicula);
       this.cargarResenas(idPelicula);
-      this.cargarPreventa(idPelicula);
     });
   }
 
@@ -109,10 +102,6 @@ export class PeliculaDetail {
     }
 
     this.idUsuarioActual.set(data.user?.id ?? null);
-  }
-
-  private async cargarPreventa(idPelicula: number): Promise<void> {
-    this.preventa.set(await this.preventaService.obtenerPorPelicula(idPelicula));
   }
 
   private async cargarResenas(idPelicula: number): Promise<void> {

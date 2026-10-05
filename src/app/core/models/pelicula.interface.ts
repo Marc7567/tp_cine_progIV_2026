@@ -10,3 +10,8 @@ export interface pelicula {
   activa: boolean;
   generos: string[];
 }
+
+export interface PeliculaMasVendida {
+  id_pelicula: number;
+  cantidad_vendida: number;
+}

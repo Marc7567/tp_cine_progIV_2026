@@ -1,6 +1,32 @@
 <section class="home-container">
   <h2>Catálogo de Películas</h2>
 
+  <!--Mostrar las 3 peliculas mas vendidas segun compra -->
+  <div class="top-peliculas">
+    <h2>Las 3 peliculas más vendidas</h2>
+
+    @if (cargarPeliculasMasVendidas()) {
+      <p class="top-mensaje">Cargando películas...</p>
+    } @else if (PeliculasMasVendidas().length > 0) {
+      <div class="top-grid">
+        @for (pelicula of PeliculasMasVendidas(); track pelicula.id_pelicula; let i = $index) {
+          <article class="top-card">
+
+            @if (pelicula.imagen) {
+              <img
+                [src]="pelicula.imagen"
+                [alt]="pelicula.titulo"
+                class="top-imagen"
+              />
+            }
+
+            <h4>{{ pelicula.titulo }}</h4>
+          </article>
+        }
+      </div>
+    }
+  </div>
+
   <!-- Barra de busqueta por titulo -->
   <app-search-bar [(termino)]="filtroBusqueda" />
 

@@ -58,6 +58,16 @@
       </div>
 
       @if (butacaSeleccionadaDatos(); as butaca) {
+        <!-- Aviso de edad (ir acompanado por un adulto) -->
+          @if (mensajeEdad()) {
+            <div
+              class="mensaje-edad"
+              [class.error]="!ContinuarCompraEdad()"
+              [class.aviso]="ContinuarCompraEdad()"
+            >
+              {{ mensajeEdad() }}
+            </div>
+          }
         <div class="seleccion-resumen">
           <h2>Butaca seleccionada</h2>
           <p>Butaca: <strong>{{ butaca.fila }}{{ butaca.columna }}</strong></p>
@@ -69,6 +79,7 @@
           <button
             type="button"
             class="continuar-btn"
+            [disabled]="!ContinuarCompraEdad()"
             (click)="irCandyBar()"
           >
             Continuar compra

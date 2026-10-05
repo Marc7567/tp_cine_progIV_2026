@@ -1,10 +1,12 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Funcion } from '../../core/models/funcion.interface';
 
 import { PeliculaService } from '../../core/services/pelicula.service';
 import { FuncionesService } from '../../core/services/funciones.service';
 import { ButacasService } from '../../core/services/butacas.service';
+import { AuthService } from '../../core/services/auth.service';
+
 import { FechaEstrenoPipe } from '../../shared/pipes/fecha-estreno.pipe';
 import { HoraPipe } from '../../shared/pipes/hora.pipe';
 
@@ -21,9 +23,13 @@ export class CompraEntrada {
   private peliculaService = inject(PeliculaService);
   private funcionesService = inject(FuncionesService);
   private butacasService = inject(ButacasService);
+  private authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
 
   funcion = signal<Funcion | null>(null);
   butacaSeleccionada = signal<number | null>(null);
+  mensajeEdad = signal<string | null>(null);
+  ContinuarCompraEdad = signal(true);
   butacas = this.butacasService.butacas;
   cargando = signal(true);
   ventaNoDisponible = signal(false);
@@ -45,14 +51,22 @@ export class CompraEntrada {
     const idButaca = this.butacaSeleccionada();
 
     if (idButaca === null) {
-      return null;
+        return null;
     }
 
-    return this.butacas().find((butaca) => butaca.id_butaca === idButaca) ?? null;
+    const butaca = this.butacas().find(butaca => butaca.id_butaca === idButaca);
+
+    if (!butaca || butaca.ocupada) {
+        return null;
+    }
+
+    return butaca;
   });
 
   constructor() {
     this.cargarDatos();
+    
+    this.destroyRef.onDestroy(() => {this.butacasService.detenerActualizacionRealTime();});
   }
 
   private async cargarDatos(): Promise<void> {
@@ -80,7 +94,46 @@ export class CompraEntrada {
     }
 
     await this.butacasService.cargarButacasPorFuncion(funcion.id_funcion, funcion.id_sala);
+    
+    this.butacasService.ActualizacionRealTime(funcion.id_funcion, funcion.id_sala);
+
     this.cargando.set(false);
+  }
+
+  private verificarEdad(): void {
+    const usuario = this.authService.currentUserData();
+    const peliculaActual = this.pelicula();
+
+    if (!usuario || !peliculaActual) {
+      this.ContinuarCompraEdad.set(false);
+      this.mensajeEdad.set('No se pudieron verificar la edad del usuario.');
+      return;
+    }
+
+    const fechaNacimiento = new Date(usuario.fecha_nacimiento);
+    const hoy = new Date();
+
+    let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+
+    const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+      edad--;
+    }
+
+    if (edad < peliculaActual.edad_minima) {
+      this.ContinuarCompraEdad.set(false);
+      this.mensajeEdad.set('El usuario no cumple con la edad mínima requerida para esta película.');
+      return;
+    }
+
+    this.ContinuarCompraEdad.set(true);
+
+    if (edad < 18) {
+      this.mensajeEdad.set('Debe ir acompañado por un adulto para poder ver la película.');
+    } else {
+      this.mensajeEdad.set(null);
+    }
   }
 
   seleccionarButaca(idButaca: number): void {
@@ -90,6 +143,7 @@ export class CompraEntrada {
       return;
     }
     this.butacaSeleccionada.set(idButaca);
+    this.verificarEdad();
   }
 
   irCandyBar(): void {

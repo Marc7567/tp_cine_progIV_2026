@@ -1,6 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Session, User } from '@supabase/supabase-js';
-
 import { SupabaseService } from './supabase.service';
 import { Usuario } from '../models/usuario.interface';
 

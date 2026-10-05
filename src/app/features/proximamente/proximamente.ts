@@ -1,9 +1,7 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { PeliculaService } from '../../core/services/pelicula.service';
-import { PreventaService } from '../../core/services/preventa.service';
 import { AlertaVentaService } from '../../core/services/alerta-venta.service';
-import { Preventa } from '../../core/models/preventa.interface';
 import { PeliculaCard } from '../../shared/componentes/pelicula-card/pelicula-card';
 
 @Component({
@@ -16,11 +14,9 @@ import { PeliculaCard } from '../../shared/componentes/pelicula-card/pelicula-ca
 export class Proximamente {
   private router = inject(Router);
   private peliculaService = inject(PeliculaService);
-  private preventaService = inject(PreventaService);
   private alertaVentaService = inject(AlertaVentaService);
 
   peliculas = this.peliculaService.peliculas;
-  preventas = signal<Record<number, Preventa | null>>({});
   mensajesAlerta = signal<Record<number, string>>({});
   activandoAlerta = signal<number | null>(null);
 
@@ -30,26 +26,14 @@ export class Proximamente {
     return this.peliculas().filter((pelicula) => pelicula.fecha_estreno > fechaActual);
   });
 
-  constructor() {
-    effect(() => {
-      const peliculas = this.peliculasProximas();
-      void this.cargarPreventas(peliculas.map((pelicula) => pelicula.id_pelicula));
-    });
-  }
+  PeliculaPreventa(pelicula: { fecha_estreno: string }): boolean {
+    const diaActual = new Date();
+    const estreno = new Date(pelicula.fecha_estreno + 'T00:00:00');
 
-  private async cargarPreventas(idsPelicula: number[]): Promise<void> {
-    const entradas = await Promise.all(
-      idsPelicula.map(async (idPelicula) => {
-        const preventa = await this.preventaService.obtenerPorPelicula(idPelicula);
-        return [idPelicula, preventa] as const;
-      }),
-    );
+    const diaDiferencia = estreno.getTime() - diaActual.getTime();
+    const diaEstreno = diaDiferencia / (1000 * 60 * 60 * 24);
 
-    this.preventas.set(Object.fromEntries(entradas));
-  }
-
-  tienePreventa(pelicula: Preventa | null): boolean {
-    return !!pelicula?.habilitada;
+    return diaEstreno <= 7;
   }
 
   alertaActivada(idPelicula: number): boolean {

@@ -4,31 +4,30 @@
   <div class="movies-grid">
     @for (pelicula of peliculasProximas(); track pelicula.id_pelicula) {
       <div class="movie-wrapper">
-
         <app-pelicula-card [pelicula]="pelicula" />
-        @if (preventas()[pelicula.id_pelicula]?.habilitada) {
-          <span class="preventa-badge">Preventas habilitadas</span>
-          <p class="preventa-price">
-            Desde {{ preventas()[pelicula.id_pelicula]?.fecha_inicio}} ·
-            ${{ preventas()[pelicula.id_pelicula]?.precio_especial }}
-          </p>
+        
+        @if (PeliculaPreventa(pelicula)) {
+          <span class="preventa-badge">Preventa disponible</span>
+        } @else {
+          <span class="proximamente-badge">Próximamente</span>
         }
 
-        <button class="detail-btn" (click)="verDetalle(pelicula.id_pelicula)">Ver Detalle</button>
+        <button class="detail-btn" (click)="verDetalle(pelicula.id_pelicula)">
+          Ver Detalle
+        </button>
         <button
           type="button"
           class="alert-btn"
           [disabled]="alertaActivada(pelicula.id_pelicula) || activandoAlerta() !== null"
           (click)="activarAlerta(pelicula.id_pelicula)"
         >
-
-          @if (activandoAlerta() === pelicula.id_pelicula) {
-            Activando alerta...
-          } @else if (alertaActivada(pelicula.id_pelicula)) {
-            Alerta activada
-          } @else {
-            Avisarme cuando salgan las entradas
-          }
+        @if (activandoAlerta() === pelicula.id_pelicula) {
+          Activando alerta...
+        } @else if (alertaActivada(pelicula.id_pelicula)) {
+          Alerta activada
+        } @else {
+          Avisarme cuando salgan las entradas
+        }
         </button>
 
         @if (mensajesAlerta()[pelicula.id_pelicula]) {

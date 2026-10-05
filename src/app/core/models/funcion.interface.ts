@@ -1,5 +1,3 @@
-import { EstadoVenta } from './preventa.interface';
-
 export interface Funcion {
   id_funcion: number;
   id_pelicula: number;
@@ -10,6 +8,7 @@ export interface Funcion {
   modalidad: string;
   idioma: string;
   precio_base: number;
+  precio_preventa: number;
   activa: boolean;
 
   // Datos calculados para la venta
@@ -17,3 +16,5 @@ export interface Funcion {
   estado_venta?: EstadoVenta;
   puede_comprar?: boolean;
 }
+
+export type EstadoVenta = 'no-disponible' | 'preventa' | 'normal';
