@@ -1,16 +1,3 @@
-export interface Perfil {
-    id_usuario: string;
-    id_rol: number;
-    nombre: string;
-    apellido: string;
-    fecha_nacimiento: string;
-    email: string;
-    credito: number;
-    puntos: number;
-    primera_compra: boolean;
-    creado_en: string;
-}
-
 export interface CanjePerfil {
     id_canje: number;
     puntos_utilizados: number;

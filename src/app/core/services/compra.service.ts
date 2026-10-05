@@ -63,7 +63,7 @@ export class CompraService {
 
         const { data, error } = await this.supabase
             .from('usuarios')
-            .select('credito, id_rol')
+            .select('credito, rol')
             .eq('id_usuario', user.id)
             .single();
 
@@ -71,7 +71,7 @@ export class CompraService {
             return 0;
         }
 
-        if (data.id_rol !== 3) {
+        if (data.rol !== "cliente") {
             return 0;
         }
 
@@ -154,7 +154,7 @@ export class CompraService {
 
         const { data, error } = await this.supabase
             .from('usuarios')
-            .select('primera_compra, id_rol')
+            .select('primera_compra, rol')
             .eq('id_usuario', usuario.id)
             .single();
 
@@ -162,7 +162,7 @@ export class CompraService {
             return false;
         }
             // Verificamos si el usuario es un clienteregistrado y si no ha realizado ninguna compra antes
-            return data?.id_rol === 3 && data?.primera_compra === false;
+            return data?.rol === "cliente" && data?.primera_compra === false;
         }
 
     vaciarCompra(): void {

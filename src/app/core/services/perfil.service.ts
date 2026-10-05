@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseService } from './supabase.service';
-import { CanjePerfil, Perfil, PeliculaVista } from '../models/perfil.interface';
+import { CanjePerfil, PeliculaVista } from '../models/perfil.interface';
+import { Usuario } from '../models/usuario.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -9,7 +10,7 @@ import { CanjePerfil, Perfil, PeliculaVista } from '../models/perfil.interface';
 export class PerfilService {
     private supabase = inject(SupabaseService).client;
 
-    async obtenerPerfil(): Promise<Perfil | null> {
+    async obtenerPerfil(): Promise<Usuario | null> {
         const { data: { user }, error: authError } = await this.supabase.auth.getUser();
 
         if (authError || !user) {
@@ -18,7 +19,7 @@ export class PerfilService {
 
         const { data, error } = await this.supabase
             .from('usuarios')
-            .select(`id_usuario, id_rol, nombre, apellido, fecha_nacimiento, email, credito, puntos, primera_compra, creado_en`)
+            .select(`id_usuario, nombre, apellido, fecha_nacimiento, email, rol, credito, puntos, primera_compra, creado_en`)
             .eq('id_usuario', user.id)
             .single();
 
@@ -26,10 +27,10 @@ export class PerfilService {
             return null;
         }
 
-        return data as Perfil;
+        return data as Usuario;
     }
 
-    async actualizarPerfil(nombre: string, apellido: string, fechaNacimiento: string): Promise<Perfil | null> {
+    async actualizarPerfil(nombre: string, apellido: string, fechaNacimiento: string): Promise<Usuario | null> {
         const { data: { user } } = await this.supabase.auth.getUser();
 
         if (!user) {
@@ -44,13 +45,13 @@ export class PerfilService {
                 fecha_nacimiento: fechaNacimiento
             })
             .eq('id_usuario', user.id)
-            .select(`id_usuario, id_rol, nombre, apellido, fecha_nacimiento, email, credito,puntos, primera_compra, creado_en`)
+            .select(`id_usuario, nombre, apellido, fecha_nacimiento, email, rol ,credito,puntos, primera_compra, creado_en`)
             .single();
 
         if (error) {
             return null;
         }
-        return data as Perfil;
+        return data as Usuario;
     }
 
     async obtenerCanjes(): Promise<CanjePerfil[]> {

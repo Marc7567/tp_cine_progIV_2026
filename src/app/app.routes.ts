@@ -3,10 +3,7 @@ import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: '/home',
-    pathMatch: 'full'
-  },
+    path: '', redirectTo: '/home', pathMatch: 'full'},
   {
     path: 'home',
     loadComponent: () => import('./features/home/home').then(c => c.Home),
@@ -61,6 +58,12 @@ export const routes: Routes = [
     path: 'generar-pdf',
     loadComponent: () => import('./features/generar-pdf/generar-pdf').then(c => c.GenerarPdf)
   },  
+  // Rutas solo para empleados
+  {
+    path: 'empleado',
+    loadComponent: () => import('./features/empleado/validacion-empleado/validacion-empleado').then(c => c.ValidacionEmpleado),
+    canActivate: [authEmpleadoGuard]
+  },
   {
     path: '**',
     redirectTo: '/home'

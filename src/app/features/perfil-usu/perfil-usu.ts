@@ -2,7 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { CanjePerfil, Perfil, PeliculaVista } from '../../core/models/perfil.interface';
+import { CanjePerfil, PeliculaVista } from '../../core/models/perfil.interface';
+import { Usuario } from '../../core/models/usuario.interface'
 import { PerfilService } from '../../core/services/perfil.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class PerfilUsu implements OnInit {
   private perfilService = inject(PerfilService);
   private router = inject(Router);
 
-  perfil = signal<Perfil | null>(null);
+  perfil = signal<Usuario | null>(null);
   canjes = signal<CanjePerfil[]>([]);
   peliculasVistas = signal<PeliculaVista[]>([]);
   recompensas = signal<any[]>([]);
@@ -166,7 +167,7 @@ export class PerfilUsu implements OnInit {
        */
       const puntos = await this.perfilService.obtenerMisPuntos();
 
-      const perfilConPuntos: Perfil = {
+      const perfilConPuntos: Usuario = {
         ...perfil,
         puntos: puntos !== null ? puntos : perfil.puntos
       };
