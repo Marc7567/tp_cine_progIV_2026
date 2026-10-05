@@ -54,8 +54,11 @@ export class MetodoPago implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
+    if (!this.usuRegistrado()) {
+      return;
+    }
+    
     const credito = await this.compraService.obtenerCreditoDisponible();
-
     this.creditoDisponible.set(credito);
   }
 
