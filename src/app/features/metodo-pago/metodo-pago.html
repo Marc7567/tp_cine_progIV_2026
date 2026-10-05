@@ -51,7 +51,8 @@
             </div>
           }
         </div>
-
+        <!-- Verificamos que el usuario sea registrado-->
+      @if (usuRegistrado()) {
         <!-- BLOQUE DE CRÉDITO -->
         <div class="panel credito">
           @if (!usarCredito()) {
@@ -125,6 +126,7 @@
             </button>
           }
         </div>
+      }
 
         <button type="button" class="boton" (click)="pagar()">
           Confirmar pago

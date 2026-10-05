@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../core/services/auth.service';
 import { CompraService } from '../../core/services/compra.service';
 
 @Component({
@@ -13,6 +14,7 @@ import { CompraService } from '../../core/services/compra.service';
 export class MetodoPago implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private authService = inject(AuthService);
   private compraService = inject(CompraService);
 
   total = signal(Number(this.route.snapshot.queryParamMap.get('total')) || 0);
@@ -29,6 +31,10 @@ export class MetodoPago implements OnInit {
   totaFinal = computed(() =>
     Math.max(this.total() - this.creditoUsado(), 0)
   );
+
+  usuRegistrado = computed(() => {
+    return this.authService.currentUserData() !== null;
+  });
 
   // Formulario de tarjeta de crédito
   formularioTarjeta = new FormGroup({
