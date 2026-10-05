@@ -15,11 +15,11 @@ export class AuthService {
     currentUserData = signal<Usuario | null>(null);
 
     constructor() {
-        this.initAuthSession();
+        this.iniciarAuthSession();
     }
 
     // Inicializa la sesión y escucha cambios (login, logout, token refresh)
-    private initAuthSession(): void {
+    private iniciarAuthSession(): void {
         this.supabase.auth.getSession().then(({ data: { session } }) => {
             this.currentSession.set(session);
             this.currentUser.set(session?.user ?? null);
@@ -61,7 +61,7 @@ export class AuthService {
         return this.supabase.auth.signUp({
             options: {data: {nombre, apellido, fecha_nacimiento: fechaNacimiento}},
             password,
-            email,
+            email
         });
     }
     

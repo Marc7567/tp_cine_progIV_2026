@@ -2,7 +2,9 @@ import { inject } from '@angular/core';
 import { Router, type CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
+// Controlamos el acceso a rutas protegidas (Para usu Registrados)
 export const authGuard: CanActivateFn = (route, state) => {
+  // obtenemos servicio y Router de autenticacion
   const authService = inject(AuthService);
   const router = inject(Router);
 

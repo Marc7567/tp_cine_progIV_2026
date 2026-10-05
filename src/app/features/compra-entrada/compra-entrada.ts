@@ -104,9 +104,15 @@ export class CompraEntrada {
     const usuario = this.authService.currentUserData();
     const peliculaActual = this.pelicula();
 
-    if (!usuario || !peliculaActual) {
+    if (!peliculaActual) {
       this.ContinuarCompraEdad.set(false);
-      this.mensajeEdad.set('No se pudieron verificar la edad del usuario.');
+      this.mensajeEdad.set('No se pudo obtener la película.');
+      return;
+    }
+
+    if (!usuario) {
+      this.ContinuarCompraEdad.set(true);
+      this.mensajeEdad.set(null);
       return;
     }
 
