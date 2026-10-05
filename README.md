@@ -144,6 +144,7 @@ Desde el lado administrativo, se dispondrá de herramientas para gestionar pelí
 
 --------------------------------
 Arquitectura:
+```
 src/
 └── app/
     ├── core/
