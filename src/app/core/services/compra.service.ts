@@ -97,12 +97,8 @@ export class CompraService {
             cantidad: item.cantidad
         }));
 
-        const { data: { user }, error: errorUsuario } = await this.supabase.auth.getUser();
-
-        if (errorUsuario) {
-            console.error('Error al obtener usuario:', errorUsuario);
-            return false;
-        }
+        const { data: { user } } = await this.supabase.auth.getUser();
+        const idUsuario = user?.id ?? null;
 
         const credito = Number(creditoUtilizado);
 
@@ -118,7 +114,7 @@ export class CompraService {
 
         const { data, error } = await this.supabase.rpc('registrar_compra',
             {
-                p_id_usuario: user?.id ?? null,
+                p_id_usuario: idUsuario,
                 p_id_funcion: compraActual.funcion.id_funcion,
                 p_id_butaca: compraActual.butaca.id_butaca,
                 p_medio_pago: medioPago,
