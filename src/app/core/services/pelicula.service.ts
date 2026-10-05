@@ -1,7 +1,6 @@
 import { Injectable, signal, computed, inject, DestroyRef } from '@angular/core';
 import { SupabaseService } from './supabase.service';
-import { pelicula } from '../models/pelicula.interface';
-import { PeliculaMasVendida } from '../models/pelicula.interface';
+import { pelicula ,PeliculaMasVendida } from '../models/pelicula.interface';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
 @Injectable({ 
@@ -95,64 +94,37 @@ export class PeliculaService {
     }
     
     async obtener3PelisMasVendidas(): Promise<PeliculaMasVendida[]> {
-        const { data: compras, error: errorCompras } = await this.supabase
-            .from('compras')
-            .select('id_compra')
-            .eq('estado', 'confirmada');
-
-        if (errorCompras) {
-            return [];
-        }
-
-        const idsCompras = (compras ?? []).map((compra) => compra.id_compra);
-
-        if (idsCompras.length === 0) {
-            return [];
-        }
-
-        const { data: entradas, error: errorEntradas } = await this.supabase
+        const { data, error } = await this.supabase
             .from('entradas')
-            .select('id_compra, id_funcion')
-            .in('id_compra', idsCompras);
+            .select(`id_funcion, funciones!inner(id_pelicula)`);
 
-        if (errorEntradas) {
+        if (error) {
+            console.error('Error al obtener películas más vendidas:', error.message);
             return [];
         }
-
-        const idsFunciones = [...new Set((entradas ?? []).map((entrada) => entrada.id_funcion))];
-
-        if (idsFunciones.length === 0) {
-            return [];
-        }
-
-        const { data: funciones, error: errorFunciones } = await this.supabase
-            .from('funciones')
-            .select('id_funcion, id_pelicula')
-            .in('id_funcion', idsFunciones);
-
-        if (errorFunciones) {
-            return [];
-        }
-
-        const peliculaPorFuncion = new Map(
-            (funciones ?? []).map((funcion) => [ funcion.id_funcion, funcion.id_pelicula])
-        );
 
         const cantidades = new Map<number, number>();
 
-        for (const entrada of entradas ?? []) {
-            const idPelicula = peliculaPorFuncion.get(entrada.id_funcion);
+        for (const entrada of data ?? []) {
+            const funcion = Array.isArray(entrada.funciones) ? entrada.funciones[0] : entrada.funciones;
 
-            if (idPelicula !== undefined) {
-                cantidades.set(idPelicula, (cantidades.get(idPelicula) ?? 0) + 1);
+            if (!funcion) {
+                continue;
             }
+
+            const idPelicula = funcion.id_pelicula;
+
+            cantidades.set(idPelicula, (cantidades.get(idPelicula) ?? 0) + 1);
         }
 
-        return [...cantidades.entries()]
-            .map(([id_pelicula, cantidad_vendida]) => ({id_pelicula, cantidad_vendida}))
-            .sort((a, b) => b.cantidad_vendida - a.cantidad_vendida)
-            .slice(0, 3);
-        }
+        return Array.from(cantidades.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(([id_pelicula, cantidad_vendida]) => ({
+                id_pelicula,
+                cantidad_vendida
+            }));
+    }
 
     // Obtener una película por ID
     getPeliculaById(id: number) {

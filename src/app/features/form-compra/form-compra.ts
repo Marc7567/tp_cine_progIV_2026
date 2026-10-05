@@ -77,9 +77,7 @@ export class FormCompra {
 
     return this.peliculaService
       .peliculas()
-      .find(
-        pelicula => pelicula.id_pelicula === funcionActual.id_pelicula
-      );
+      .find(pelicula => pelicula.id_pelicula === funcionActual.id_pelicula);
   });
 
   totalCandyBar = computed(() => {

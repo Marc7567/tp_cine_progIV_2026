@@ -100,6 +100,7 @@ export class CompraService {
         const { data: { user }, error: errorUsuario } = await this.supabase.auth.getUser();
 
         if (errorUsuario) {
+            console.error('Error al obtener usuario:', errorUsuario);
             return false;
         }
 
@@ -129,6 +130,7 @@ export class CompraService {
         );
 
         if (error) {
+            console.error('Error de registrar_compra:', error);
             return false;
         }
 
