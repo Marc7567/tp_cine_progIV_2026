@@ -52,8 +52,6 @@ export class GenerarPdf implements OnInit {
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(10);
 
-      pdf.text(`Codigo de compra: ${compraActual.codigoCompra}`, 30, y);
-
       y += 10;
 
       pdf.setFont('helvetica', 'bold');
@@ -172,6 +170,10 @@ export class GenerarPdf implements OnInit {
       y += 5;
 
       pdf.addImage(qr, 'PNG', 80, y, 50, 50);
+
+      y += 5;
+
+      pdf.text(`Codigo de su compra: ${compraActual.codigoCompra}`, 105, y, { align: 'center' });
 
       y += 58;
 
