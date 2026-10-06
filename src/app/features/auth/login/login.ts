@@ -47,8 +47,17 @@ export class Login {
         throw error;
       }
       
-      // Si el login es exitoso, redirigimos al home
-      await this.router.navigate(['/home']);
+      // obtenemos los datos del usuario
+      const usuario = this.authService.currentUserData();
+
+      // vemos si usuario es cliente, empleado
+      if (usuario?.rol === 'empleado') {
+        // si es empleado
+        await this.router.navigate(['/empleado']);
+      } else {
+        // si es cliente
+        await this.router.navigate(['/home']);
+      }
     } catch (error: any) {
       this.errorMessage.set(error.message || 'Error al iniciar sesión.');
       

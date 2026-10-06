@@ -1,0 +1,122 @@
+<div class="validar-container">
+  <h2>Validar operación</h2>
+
+  @if (modoValidacion() === 'seleccionar') {
+    <div class="opciones-validacion">
+      <button type="button" (click)="iniciarEscaneo()">Escanear QR</button>
+      <button type="button" (click)="mostrarCodigo()">Por código</button>
+    </div>
+  }
+
+  @if (modoValidacion() === 'codigo') {
+    <form [formGroup]="codigoForm" (ngSubmit)="validarCodigo()">
+      <label for="codigo">Código de compra</label>
+      <input id="codigo" type="text" formControlName="codigo" placeholder="QR-..." />
+
+      <button type="submit" [disabled]="codigoForm.invalid || cargando()">
+        {{ cargando() ? 'Validando...' : 'Validar compra' }}
+      </button>
+    </form>
+
+    <button type="button" (click)="volverSeleccion()">Volver</button>
+  }
+
+  @if (modoValidacion() === 'escaner') {
+    <div class="escanear-container">
+      <h3>Escanear código QR</h3>
+
+      <button type="button" (click)="volverSeleccion()">Cancelar</button>
+    </div>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (compra()) {
+    <div class="resultado">
+      <h3>Datos de compra</h3>
+      <p><strong>Estado: </strong>{{ compra().estado }}</p>
+      <p><strong>Fecha: </strong>{{ compra().fecha_compra }}</p>
+      <p><strong>Total:</strong>${{ compra().total }}</p>
+
+      <p><strong>Código de compra: </strong>{{ compra().codigo_qr }}</p>
+
+      <!-- Datos del comprador -->
+      <h3>Datos del comprador</h3>
+      @if (compra().datos_comprador) {
+        <p><strong>Nombre: </strong>{{ compra().datos_comprador.nombre }}</p>
+        <p><strong>Apellido: </strong>{{ compra().datos_comprador.apellido }}</p>
+
+        <p><strong>DNI: </strong>{{ compra().datos_comprador.dni }}</p>
+      }
+
+      <!-- Mostramos reconpensas del usaurio -->
+      @if (compra().usuarios) {
+        <p><strong>Puntos: </strong>{{ compra().usuarios.puntos }}</p>
+
+        @if (compra().usuarios.canjes?.length > 0) {
+          <h3>Recompensas canjeadas</h3>
+
+          @for (canje of compra().usuarios.canjes; track canje.id_canje) {
+            <div class="recompensa">
+              <p>
+                <strong>{{ canje.recompensas?.nombre }}</strong>
+              </p>
+              <p>{{ canje.recompensas?.descripcion }}</p>
+              <p><strong>Estado:</strong>{{ canje.estado }}</p>
+            </div>
+          }
+        }
+      }
+
+      <h3>Entradas</h3>
+      @for (entrada of compra().entradas; track entrada.id_entrada) {
+        <div class="entrada">
+          <p><strong>Película: </strong>{{ entrada.funciones?.peliculas?.titulo }}</p>
+          <p><strong>Fecha: </strong>{{ entrada.funciones?.fecha }}</p>
+          <p><strong>Hora: </strong>{{ entrada.funciones?.hora_inicio }}</p>
+          <p><strong>Sala: </strong>{{ entrada.funciones?.id_sala }}</p>
+          <p><strong>Butaca: </strong>{{ entrada.butacas?.fila }}{{ entrada.butacas?.columna }}</p>
+
+          <p>
+            <strong>Estado:</strong>
+            {{ entrada.utilizada ? 'Ya utilizada' : 'Disponible' }}
+          </p>
+        </div>
+      }
+        
+      <!-- Mostramos los productos y combos (si es que compro) -->
+      <h3>Productos y combos</h3>
+      @if (compra().detalle_compra?.length > 0) {
+        @for (detalle of compra().detalle_compra; track detalle.id_detalle) {
+          <div class="detalle">
+            @if (detalle.productos) {
+              <p><strong>Producto:</strong>{{ detalle.productos.nombre }}</p>
+              <p>Categoria: {{ detalle.productos.categoria }}</p>
+            } @else if (detalle.combos) {
+              <p><strong>Combo:</strong>{{ detalle.combos.nombre }}</p>
+              <p>{{ detalle.combos.descripcion }}</p>
+            }
+
+            <p>Cantidad: {{ detalle.cantidad }}</p>
+          </div>
+        }
+      } @else {
+        <p>No hay productos o combos en esta compra</p>
+      }
+
+      <button
+        type="button"
+        (click)="confirmarOperacion()"
+        [disabled]="cargando() || compra().codigo_usu"
+      >
+        {{ compra().codigo_usu ? 'Operacion utilizada' : 'Confirmar operacion' }}
+      </button>
+
+      @if (mensaje()) {
+        <p class="mensaje-exito">{{ mensaje() }}</p>
+      }
+    </div>
+  }
+</div>

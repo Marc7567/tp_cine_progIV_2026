@@ -134,6 +134,22 @@ export class CompraService {
             return false;
         }
 
+        const idCompra = Number(data[0].id_compra);
+
+        const { error: errorComprador } = await this.supabase
+            .from('datos_comprador')
+            .insert({
+                id_compra: idCompra,
+                nombre: compraActual.comprador.nombre,
+                apellido: compraActual.comprador.apellido,
+                dni: compraActual.comprador.dni,
+                email: compraActual.comprador.email
+            });
+
+        if (errorComprador) {
+            console.error('Error al guardar los datos del comprador:', errorComprador);
+        }
+
         this.creditoUtilizadoSignal.set(Number(data[0].credito_utilizado ?? 0));
 
         this.compraSignal.set({

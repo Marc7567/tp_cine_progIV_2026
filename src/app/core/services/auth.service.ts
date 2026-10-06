@@ -43,17 +43,23 @@ export class AuthService {
     }
     
     // Cargar los datos del usuario desde la tabla 'usuarios'
-    private async cargarDatosUsuario(userId: string): Promise<void> {
+    async cargarDatosUsuario(userId: string): Promise<Usuario | null> {
         const { data, error } = await this.supabase
             .from('usuarios')
             .select('*')
             .eq('id_usuario', userId)
             .single();
 
-        if (error) {
-            return;
+        if (error || !data) {
+            this.currentUserData.set(null);
+            return null;
         }
-        this.currentUserData.set(data);
+
+        const usuario = data as Usuario;
+
+        this.currentUserData.set(usuario);
+
+        return usuario;
     }
     
     // Registrar un nuevo usuario (retorna una promesa con la respuesta de Supabase)
@@ -67,7 +73,15 @@ export class AuthService {
     
     // Iniciar sesión
     async signIn(email: string, password: string) {
-        return this.supabase.auth.signInWithPassword({email, password});
+        const resultado = await this.supabase.auth.signInWithPassword({email, password});
+
+        if (resultado.error || !resultado.data.user) {
+            return resultado;
+        }
+
+        await this.cargarDatosUsuario(resultado.data.user.id);
+
+        return resultado;
     }
     
     // Cerrar sesión

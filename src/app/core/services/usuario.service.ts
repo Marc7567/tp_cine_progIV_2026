@@ -7,7 +7,7 @@ import { Usuario } from '../models/usuario.interface';
     providedIn: 'root',
 })
 
-export class PerfilService {
+export class UsuarioService {
     private supabase = inject(SupabaseService).client;
 
     async obtenerPerfil(): Promise<Usuario | null> {

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { CanjePerfil, PeliculaVista } from '../../core/models/perfil.interface';
 import { Usuario } from '../../core/models/usuario.interface'
-import { PerfilService } from '../../core/services/perfil.service';
+import { UsuarioService } from '../../core/services/usuario.service';
 
 @Component({
   imports: [ReactiveFormsModule, DatePipe],
@@ -16,7 +16,7 @@ import { PerfilService } from '../../core/services/perfil.service';
 
 export class PerfilUsu implements OnInit {
   private fb = inject(FormBuilder);
-  private perfilService = inject(PerfilService);
+  private usuarioService = inject(UsuarioService);
   private router = inject(Router);
 
   perfil = signal<Usuario | null>(null);
@@ -154,7 +154,7 @@ export class PerfilUsu implements OnInit {
     this.error.set('');
 
     try {
-      const perfil = await this.perfilService.obtenerPerfil();
+      const perfil = await this.usuarioService.obtenerPerfil();
 
       if (!perfil) {
         this.error.set('No se pudo obtener la información del perfil.');
@@ -165,7 +165,7 @@ export class PerfilUsu implements OnInit {
        * Cargamos los datos personales y también
        * los puntos mediante la función propia.
        */
-      const puntos = await this.perfilService.obtenerMisPuntos();
+      const puntos = await this.usuarioService.obtenerMisPuntos();
 
       const perfilConPuntos: Usuario = {
         ...perfil,
@@ -181,9 +181,9 @@ export class PerfilUsu implements OnInit {
       });
 
       const [canjes, peliculas, recompensas] = await Promise.all([
-        this.perfilService.obtenerCanjes(),
-        this.perfilService.obtenerPeliculasVistas(),
-        this.perfilService.obtenerRecompensas()
+        this.usuarioService.obtenerCanjes(),
+        this.usuarioService.obtenerPeliculasVistas(),
+        this.usuarioService.obtenerRecompensas()
       ]);
 
       this.canjes.set(canjes);
@@ -250,7 +250,7 @@ export class PerfilUsu implements OnInit {
     try {
       const fechaNacimientoBD = this.convertirFechaParaBD(fechaNacimiento!);
 
-      const perfilActualizado = await this.perfilService.actualizarPerfil(nombre!, apellido!, fechaNacimientoBD);
+      const perfilActualizado = await this.usuarioService.actualizarPerfil(nombre!, apellido!, fechaNacimientoBD);
 
       if (!perfilActualizado) {
         this.error.set('No se pudieron guardar los cambios.');
@@ -289,7 +289,7 @@ export class PerfilUsu implements OnInit {
     this.error.set('');
 
     try {
-      const resultado = await this.perfilService.canjearRecompensa(idRecompensa);
+      const resultado = await this.usuarioService.canjearRecompensa(idRecompensa);
 
       if (resultado.errorMessage || !resultado.data) {
         this.error.set(resultado.errorMessage ?? 'No se pudo realizar el canje.');
@@ -309,7 +309,7 @@ export class PerfilUsu implements OnInit {
        * Actualizamos el historial para que
        * aparezca inmediatamente el nuevo canje.
        */
-      const canjes = await this.perfilService.obtenerCanjes();
+      const canjes = await this.usuarioService.obtenerCanjes();
 
       this.canjes.set(canjes);
       this.mensaje.set('El canje se realizó correctamente.');

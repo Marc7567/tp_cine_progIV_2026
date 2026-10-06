@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { authEmpleadoGuard } from './core/guards/auth-empleado.guard';
 
 export const routes: Routes = [
   {
@@ -58,10 +59,10 @@ export const routes: Routes = [
     path: 'generar-pdf',
     loadComponent: () => import('./features/generar-pdf/generar-pdf').then(c => c.GenerarPdf)
   },  
-  // Rutas solo para empleados
+  // Ruta solo para empleados
   {
     path: 'empleado',
-    loadComponent: () => import('./features/empleado/validacion-empleado/validacion-empleado').then(c => c.ValidacionEmpleado),
+    loadComponent: () => import('./features/usu-empleado/validar-entrada/validar-entrada').then(c => c.ValidarEntrada),
     canActivate: [authEmpleadoGuard]
   },
   {

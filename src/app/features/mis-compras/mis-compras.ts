@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { PerfilService } from '../../core/services/perfil.service';
+import { UsuarioService } from '../../core/services/usuario.service';
 
 @Component({
   imports: [],
@@ -9,7 +9,7 @@ import { PerfilService } from '../../core/services/perfil.service';
   templateUrl: './mis-compras.html',
 })
 export class MisCompras implements OnInit {
-  private perfilService = inject(PerfilService);
+  private usuarioService = inject(UsuarioService);
 
   compras = signal<any[]>([]);
   cargando = signal(true);
@@ -26,7 +26,7 @@ export class MisCompras implements OnInit {
     this.error.set('');
 
     try {
-      const compras = await this.perfilService.obtenerMisCompras();
+      const compras = await this.usuarioService.obtenerMisCompras();
       this.compras.set(compras);
 
     } catch (error) {
@@ -47,7 +47,7 @@ export class MisCompras implements OnInit {
     this.error.set('');
 
     try {
-      const resultado = await this.perfilService.cancelarCompra(idCompra);
+      const resultado = await this.usuarioService.cancelarCompra(idCompra);
 
       if (!resultado.exito) {
         this.error.set(resultado.mensaje);
