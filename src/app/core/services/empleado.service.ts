@@ -22,7 +22,7 @@ export class EmpleadoService {
                 datos_comprador (id_compra, nombre, apellido, dni, email),
 
                 usuarios (id_usuario, nombre, apellido, fecha_nacimiento, email, credito, puntos, primera_compra, creado_en, rol,
-                    canjes (id_canje, puntos_utilizados, fecha, estado,
+                    canjes (id_canje, puntos_utilizados, fecha, estado, reclamado,
                         recompensas (id_recompensa, nombre, descripcion, tipo, valor, costo_puntos, activa)
                     )
                 ),
@@ -49,15 +49,16 @@ export class EmpleadoService {
         console.log('Compra obtenida:', data);
         console.log('Usuario de la compra:', data.usuarios);
 
+        const usuario = data.usuarios as any;
+        console.log('Canjes del usuario:', usuario?.canjes);
+
         return data;
     }
 
     async CompraUtilizada(idCompra: number): Promise<boolean> {
         const { data, error } = await this.supabase
             .from('compras')
-            .update({
-                codigo_usu: true
-            })
+            .update({codigo_usu: true})
             .eq('id_compra', idCompra)
             .eq('codigo_usu', false)
             .select('id_compra, codigo_usu')
@@ -76,6 +77,23 @@ export class EmpleadoService {
 
         if (errorEntrada) {
             console.error('Error al utilizar las entradas:', errorEntrada);
+            return false;
+        }
+
+        return true;
+    }
+
+    async ReclamarCanjes(idCanje: number): Promise<boolean> {
+        const { data, error } = await this.supabase
+            .from('canjes')
+            .update({reclamado: true})
+            .eq('id_canje', idCanje)
+            .eq('reclamado', false)
+            .select('id_canje, reclamado')
+            .maybeSingle();
+
+        if (error || !data) {
+            console.error('Error al reclamar el canje:', error);
             return false;
         }
 

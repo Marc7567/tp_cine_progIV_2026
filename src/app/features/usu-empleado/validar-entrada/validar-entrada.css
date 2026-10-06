@@ -1,125 +1,119 @@
 .validar-container {
-  width: 700px;
-  max-width: 90%;
-  margin: 40px auto;
-  padding: 30px;
-  box-sizing: border-box;
-  text-align: center;
+    width: 700px;
+    max-width: 90%;
+    margin: 40px auto;
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: center;
 }
 
 .validar-container h2 {
-  margin-bottom: 30px;
+    margin-bottom: 30px;
 }
 
 .opciones-validacion {
-  max-width: 450px;
-  margin: 0 auto;
-  padding: 30px;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
-.opciones-validacion button, form button, .escanear-container button {
-  display: block;
-  width: 250px;
-  margin: 20px auto 0;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
+.opciones-validacion button, form button, .escanear-container button, form + button, .resultado > button {
+    display: block;
+    width: 250px;
+    margin: 20px auto 0;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 button:hover {
-  transform: scale(1.03);
+    transform: scale(1.03);
 }
 
 button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 form {
-  max-width: 450px;
-  margin: 0 auto;
-  padding: 30px;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-  text-align: left;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    text-align: left;
 }
 
 form label {
-  display: block;
-  margin: 15px 0 6px;
-  font-weight: bold;
+    display: block;
+    margin: 15px 0 6px;
+    font-weight: bold;
 }
 
 form input {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  border: 1px solid #bbb;
-  border-radius: 6px;
-  font-size: 1rem;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font-size: 1rem;
 }
 
 form button {
-  margin: 20px auto 0;
+    margin: 20px auto 0;
 }
 
 .escanear-container {
-  max-width: 450px;
-  margin: 0 auto;
-  padding: 30px;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
 .resultado {
-  margin-top: 30px;
-  padding: 30px;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-  text-align: left;
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    text-align: left;
 }
 
-.resultado h3{
-  text-align: center;
-}
-
-.resultado h4 {
-  margin-top: 25px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #bbb;
+.resultado h3 {
+    text-align: center;
 }
 
 .resultado p {
-  margin: 8px 0;
+    margin: 8px 0;
 }
 
 .entrada, .detalle, .recompensa {
-  margin: 15px 0;
-  padding: 18px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background: #f8f8f8;
+    margin: 15px 0;
+    padding: 18px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f8f8f8;
 }
 
 .detalle {
-  display: block;
+    display: block;
 }
 
 .error {
-  margin: 20px auto;
-  padding: 12px;
-  max-width: 450px;
-  border-radius: 8px;
-  text-align: center;
-  background: #f5d6d6;
+    margin: 20px auto;
+    padding: 12px;
+    max-width: 450px;
+    border-radius: 8px;
+    text-align: center;
+    background: #f5d6d6;
 }
