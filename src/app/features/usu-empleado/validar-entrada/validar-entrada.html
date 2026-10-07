@@ -33,8 +33,8 @@
   }
 
   @if (compra()) {
-    <h3>Datos de compra</h3>
     <div class="resultado">
+        <h3>Datos de compra</h3>
         <div class="entrada">
             <p><strong>Estado: </strong>{{ compra().estado }}</p>
             <p><strong>Fecha: </strong>{{ compra().fecha_compra | date: 'dd/mm/yyyy'}}</p>
@@ -50,8 +50,9 @@
             <p><strong>DNI: </strong>{{ compra().datos_comprador.dni }}</p>
         </div>
       }
-
-      <h3>Entradas</h3>
+        
+      <!-- Datos de Entrada -->
+      <h3>Datos de la entrada</h3>
       @for (entrada of compra().entradas; track entrada.id_entrada) {
         <div class="entrada">
           <p><strong>Pelicula: </strong>{{ entrada.funciones?.peliculas?.titulo }}</p>
@@ -59,7 +60,6 @@
           <p><strong>Hora: </strong>{{ entrada.funciones?.hora_inicio }}</p>
           <p><strong>Sala: </strong>{{ entrada.funciones?.id_sala }}</p>
           <p><strong>Butaca: </strong>{{ entrada.butacas?.fila }}{{ entrada.butacas?.columna }}</p>
-          <p><strong>Estado:</strong>{{ entrada.utilizada ? 'Utilizado' : 'Disponible' }}</p>
         </div>
       }
 
@@ -89,7 +89,7 @@
       }
         
       <!-- Mostramos los productos y combos (si es que compro) -->
-      <h3>Productos y combos</h3>
+      <h3>Productos y combos del Candy Bar</h3>
       @if (compra().detalle_compra?.length > 0) {
         @for (detalle of compra().detalle_compra; track detalle.id_detalle) {
           <div class="detalle">
