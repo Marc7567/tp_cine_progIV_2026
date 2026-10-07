@@ -171,11 +171,11 @@ export class GenerarPdf implements OnInit {
 
       pdf.addImage(qr, 'PNG', 80, y, 50, 50);
 
-      y += 5;
+      y += 55;
 
       pdf.text(`Codigo de su compra: ${compraActual.codigoCompra}`, 105, y, { align: 'center' });
 
-      y += 58;
+      y += 10;
 
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(9);
